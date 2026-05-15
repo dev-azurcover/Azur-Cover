@@ -37,7 +37,7 @@ export function Sectors() {
           {sectors.map((s, i) => (
             <ScrollReveal key={s.id} delay={120 + i * 100} as="li">
               <Link
-                href="#contact"
+                href="/contact"
                 data-cursor="hover"
                 className="group relative block aspect-[4/5] overflow-hidden rounded-md bg-graphite"
               >

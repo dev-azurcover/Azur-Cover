@@ -38,10 +38,14 @@ type Slot = {
 };
 
 const SLOTS: Record<number, Slot> = {
-  0: { x: 38, y: 50, scale: 1.00, opacity: 1.0, blur: 0,  saturate: 1.0, brightness: 1.0, z: 50 }, // ACTIVE — centre of stage
-  1: { x: 78, y: 70, scale: 0.55, opacity: 0.55, blur: 8, saturate: 0.3, brightness: 0.7, z: 30 }, // NEXT — bottom-right
-  2: { x: 96, y: 30, scale: 0.35, opacity: 0.30, blur: 14, saturate: 0.1, brightness: 0.55, z: 20 }, // QUEUE — top-right corner
-  3: { x: 38, y: 50, scale: 1.00, opacity: 0,   blur: 0,  saturate: 1.0, brightness: 1.0, z: 10 }, // PREV — fades out in place
+  // Carousel flows right → left through the centre. Each transition makes
+  // the active planet (offset 0) slide diagonally from slot 1 to slot 0,
+  // while the previous active (offset 3) slides further LEFT and fades —
+  // visible scroll motion, no static fade.
+  0: { x: 42, y: 50, scale: 1.00, opacity: 1.0,  blur: 0,  saturate: 1.0,  brightness: 1.0,  z: 50 }, // ACTIVE — centre-stage
+  1: { x: 80, y: 70, scale: 0.55, opacity: 0.55, blur: 8,  saturate: 0.3,  brightness: 0.7,  z: 30 }, // NEXT — bottom-right
+  2: { x: 96, y: 30, scale: 0.32, opacity: 0.25, blur: 14, saturate: 0.1,  brightness: 0.55, z: 20 }, // QUEUE — top-right corner (entry)
+  3: { x: 8,  y: 35, scale: 0.45, opacity: 0,    blur: 6,  saturate: 0.5,  brightness: 0.7,  z: 10 }, // PREV — slides LEFT-up and fades
 };
 
 function slotForOffset(offset: number): Slot {
@@ -76,20 +80,34 @@ export function SolutionsCarousel() {
         el.style.zIndex = String(slot.z);
         el.style.pointerEvents = slot.opacity === 0 ? "none" : "auto";
 
+        // Position + scale (long, smooth) — gives the visible "scroll" feel
         gsap.to(el, {
-          // Position via percentage of stage container; -50% centres on the spot
           left: `${slot.x}%`,
           top: `${slot.y}%`,
           xPercent: -50,
           yPercent: -50,
           scale: slot.scale,
-          opacity: slot.opacity,
-          duration: immediate ? 0 : 1.4,
+          duration: immediate ? 0 : 1.6,
           ease: "power3.inOut",
           overwrite: "auto",
           onStart: () => { el.style.willChange = "transform, opacity, filter"; },
           onComplete: () => { el.style.willChange = "auto"; },
         });
+
+        // Opacity decoupled — exit fades early-and-fast, entry comes in late.
+        // Result: the previous planet is visibly travelling out for the first
+        // half of the transition, then disappears so the centre stays clean.
+        const isEntering = offset === 0;
+        const isExiting = offset === 3;
+        gsap.to(el, {
+          opacity: slot.opacity,
+          duration: immediate ? 0 : (isEntering ? 0.9 : isExiting ? 1.0 : 1.2),
+          delay: immediate ? 0 : (isEntering ? 0.55 : 0),
+          ease: isEntering ? "power2.out" : isExiting ? "power2.in" : "power2.inOut",
+          overwrite: "auto",
+        });
+
+        // Filter (blur / saturate / brightness)
         gsap.to(el, {
           filter: `blur(${slot.blur}px) saturate(${slot.saturate}) brightness(${slot.brightness})`,
           duration: immediate ? 0 : 1.4,

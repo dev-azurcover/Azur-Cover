@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -38,11 +39,18 @@ export function Header() {
       >
         <div className="mx-auto flex h-full max-w-[1320px] items-center justify-between px-6 sm:px-10 lg:px-20">
           <Link
-            href="#top"
+            href="/"
             aria-label="Azur Cover - retour à l'accueil"
-            className="font-mono text-[14px] font-semibold uppercase tracking-[0.18em]"
+            className="block"
           >
-            Azur <span className="opacity-60">Cover</span>
+            <Image
+              src="/images/brand/logo.png"
+              alt="Azur Cover"
+              width={120}
+              height={55}
+              priority
+              className="h-9 w-auto md:h-10"
+            />
           </Link>
 
           <nav

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { site } from "@/content/site";
 import { expertises } from "@/content/expertises";
@@ -44,11 +45,14 @@ export function Footer() {
       <Container size="default" className="py-20">
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <Link
-              href="#top"
-              className="font-mono text-[14px] font-semibold uppercase tracking-[0.18em] text-white"
-            >
-              Azur Cover
+            <Link href="/" className="inline-block" aria-label="Azur Cover - accueil">
+              <Image
+                src="/images/brand/logo-white.png"
+                alt="Azur Cover"
+                width={140}
+                height={64}
+                className="h-11 w-auto"
+              />
             </Link>
             <p className="mt-5 max-w-[260px] text-sm leading-relaxed text-white/55">
               Expert national en performance thermique et étanchéité.

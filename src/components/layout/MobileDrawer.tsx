@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -33,9 +34,15 @@ export function MobileDrawer({ open, onClose }: Props) {
       )}
     >
       <div className="flex h-16 items-center justify-between px-6">
-        <span className="font-mono text-[14px] font-semibold uppercase tracking-[0.18em]">
-          Azur <span className="opacity-60">Cover</span>
-        </span>
+        <Link href="/" onClick={onClose} aria-label="Azur Cover - accueil">
+          <Image
+            src="/images/brand/logo.png"
+            alt="Azur Cover"
+            width={120}
+            height={55}
+            className="h-9 w-auto"
+          />
+        </Link>
         <button
           type="button"
           onClick={onClose}

@@ -8,6 +8,7 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { CountUp } from "@/components/motion/CountUp";
 import { expertises, getExpertise } from "@/content/expertises";
 import { realisations } from "@/content/realisations";
 
@@ -60,7 +61,7 @@ export default async function ExpertisePage({
       <main id="main">
         {/* Hero with image */}
         <section
-          data-bg="1"
+
           className="relative pt-40 pb-20 md:pt-48 md:pb-28"
           aria-labelledby="expertise-h1"
         >
@@ -109,7 +110,7 @@ export default async function ExpertisePage({
         </section>
 
         {/* KPIs band */}
-        <section data-bg="3" className="border-y border-line/60 py-12 md:py-16">
+        <section className="border-y border-line/60 py-12 md:py-16">
           <Container>
             <ul className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-16">
               {e.kpis.map((k) => (
@@ -123,7 +124,7 @@ export default async function ExpertisePage({
                       lineHeight: 1,
                     }}
                   >
-                    {k.value}
+                    <CountUp value={k.value} />
                   </div>
                   <div className="mt-3 text-sm leading-relaxed text-muted">{k.label}</div>
                 </li>
@@ -133,7 +134,7 @@ export default async function ExpertisePage({
         </section>
 
         {/* Problem / Solution */}
-        <section data-bg="3" className="py-[clamp(120px,18vw,200px)]">
+        <section className="py-[clamp(120px,18vw,200px)]">
           <Container>
             <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-20">
               <ScrollReveal>
@@ -163,7 +164,7 @@ export default async function ExpertisePage({
         </section>
 
         {/* Sections (longform) */}
-        <section data-bg="4" className="py-[clamp(120px,18vw,200px)]">
+        <section className="py-[clamp(120px,18vw,200px)]">
           <Container size="narrow">
             <div className="space-y-20 md:space-y-28">
               {e.sections.map((s, i) => (
@@ -194,7 +195,7 @@ export default async function ExpertisePage({
         </section>
 
         {/* Bullets summary */}
-        <section data-bg="4" className="border-y border-line/60 py-20">
+        <section className="border-y border-line/60 py-20">
           <Container>
             <Eyebrow>Points clés</Eyebrow>
             <ul className="mt-8 grid grid-cols-1 gap-x-10 gap-y-4 md:grid-cols-2">
@@ -210,7 +211,7 @@ export default async function ExpertisePage({
 
         {/* Related realisations */}
         {related.length > 0 && (
-          <section data-bg="4" className="py-[clamp(120px,18vw,200px)]">
+          <section className="py-[clamp(120px,18vw,200px)]">
             <Container>
               <Eyebrow>Réalisations associées</Eyebrow>
               <h2
@@ -230,7 +231,7 @@ export default async function ExpertisePage({
                     <Link
                       href={`/realisations/${r.slug}`}
                       className="group block"
-                      data-cursor="hover"
+
                     >
                       <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-graphite/5">
                         <Image
@@ -257,7 +258,7 @@ export default async function ExpertisePage({
         )}
 
         {/* Other expertises */}
-        <section data-bg="3" className="border-t border-line/60 py-20">
+        <section className="border-t border-line/60 py-20">
           <Container>
             <Eyebrow>Autres expertises</Eyebrow>
             <ul className="mt-8 grid grid-cols-1 gap-px bg-line/60 sm:grid-cols-3 [&>li]:bg-bg">
@@ -266,7 +267,7 @@ export default async function ExpertisePage({
                   <Link
                     href={`/expertises/${o.slug}`}
                     className="group block p-6 transition-colors hover:bg-line/30"
-                    data-cursor="hover"
+
                   >
                     <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
                       {o.index}

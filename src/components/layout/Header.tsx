@@ -43,14 +43,16 @@ export function Header() {
             aria-label="Azur Cover - retour à l'accueil"
             className="block"
           >
-            <Image
-              src="/images/brand/logo.png"
-              alt="Azur Cover"
-              width={120}
-              height={55}
-              priority
-              className="h-9 w-auto md:h-10"
-            />
+            <div className="relative h-9 w-[78px] md:h-10 md:w-[87px]">
+              <Image
+                src="/images/brand/logo.png"
+                alt="Azur Cover"
+                fill
+                priority
+                sizes="120px"
+                className="object-contain"
+              />
+            </div>
           </Link>
 
           <nav
@@ -80,7 +82,7 @@ export function Header() {
               ) : (
                 <Link
                   href="/contact"
-                  data-cursor="hover"
+
                   className="group inline-flex items-center gap-2 text-sm font-medium text-ink underline-grow"
                 >
                   Demander un audit

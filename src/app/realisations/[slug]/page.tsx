@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
+import { CountUp } from "@/components/motion/CountUp";
 import { realisations, getRealisation } from "@/content/realisations";
 
 export function generateStaticParams() {
@@ -45,7 +46,7 @@ export default async function RealisationPage({
       <Header />
       <main id="main">
         {/* Hero */}
-        <section data-bg="1" className="pt-40 pb-12 md:pt-48 md:pb-16" aria-labelledby="r-h1">
+        <section className="pt-40 pb-12 md:pt-48 md:pb-16" aria-labelledby="r-h1">
           <Container>
             <Link
               href="/realisations"
@@ -76,7 +77,7 @@ export default async function RealisationPage({
         </section>
 
         {/* Hero image full-bleed */}
-        <section data-bg="1" className="pb-20 md:pb-28">
+        <section className="pb-20 md:pb-28">
           <div className="mx-auto w-full max-w-[1320px] px-6 sm:px-10 lg:px-20">
             <div className="relative aspect-[16/9] w-full overflow-hidden rounded-md bg-graphite/5">
               <Image
@@ -92,7 +93,7 @@ export default async function RealisationPage({
         </section>
 
         {/* Fiche technique band */}
-        <section data-bg="3" className="border-y border-line/60 py-12 md:py-16">
+        <section className="border-y border-line/60 py-12 md:py-16">
           <Container>
             <dl className="grid grid-cols-2 gap-y-8 sm:grid-cols-4">
               <div>
@@ -120,7 +121,7 @@ export default async function RealisationPage({
         </section>
 
         {/* Story */}
-        <section data-bg="3" className="py-[clamp(120px,18vw,200px)]">
+        <section className="py-[clamp(120px,18vw,200px)]">
           <Container size="narrow">
             <div className="space-y-7 text-ink" style={{ fontSize: "1.1875rem", lineHeight: 1.6 }}>
               {r.story.map((p, i) => (
@@ -141,7 +142,7 @@ export default async function RealisationPage({
                         lineHeight: 1,
                       }}
                     >
-                      {kv.value}
+                      <CountUp value={kv.value} />
                     </div>
                     <div className="mt-3 text-sm leading-relaxed text-muted">{kv.label}</div>
                   </div>
@@ -169,7 +170,7 @@ export default async function RealisationPage({
         </section>
 
         {/* Prev / next */}
-        <section data-bg="4" className="border-t border-line/60">
+        <section className="border-t border-line/60">
           <Container>
             <div className="grid grid-cols-1 md:grid-cols-2">
               <Link

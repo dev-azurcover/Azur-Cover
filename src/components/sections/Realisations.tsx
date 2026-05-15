@@ -31,7 +31,7 @@ export function Realisations() {
   return (
     <section
       id="realisations"
-      data-bg="3"
+
       aria-labelledby="realisations-h"
       className="overflow-hidden py-[clamp(120px,18vw,200px)]"
     >
@@ -115,7 +115,7 @@ export function Realisations() {
               <div className="mt-10">
                 <Link
                   href="/realisations"
-                  data-cursor="hover"
+
                   className="inline-flex items-center gap-2 text-sm font-medium text-ink underline-grow"
                 >
                   Voir toutes les réalisations
@@ -147,7 +147,7 @@ export function Realisations() {
                   <Link
                     href={`/realisations/${r.slug}`}
                     className="group block"
-                    data-cursor="hover"
+
                   >
                     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md border border-line/60 bg-bg">
                       <Image

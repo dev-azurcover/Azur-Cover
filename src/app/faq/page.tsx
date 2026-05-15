@@ -27,7 +27,7 @@ export default function FAQPage() {
           lead="Cool Roofing, Azur Reflect, étanchéité, méthode, certifications — voici les réponses aux questions que nous recevons le plus souvent."
         />
 
-        <section data-bg="3" className="pb-[clamp(120px,18vw,200px)]">
+        <section className="pb-[clamp(120px,18vw,200px)]">
           <Container size="narrow">
             <div className="space-y-20">
               {order.map((cat) =>

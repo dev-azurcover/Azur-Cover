@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import Script from "next/script";
 import { site } from "@/content/site";
+import { expertises } from "@/content/expertises";
 import "./globals.css";
 
 const inter = localFont({
@@ -76,24 +76,59 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-const jsonLd = JSON.stringify({
+// JSON-LD graph: LocalBusiness + Organization + 4 Service nodes (one per
+// expertise) + WebSite. Rendered inline at SSR for crawler reliability.
+const jsonLdGraph = {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  name: site.name,
-  url: site.url,
-  email: site.email,
-  telephone: site.phones[0],
-  description: site.description,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: site.address.street,
-    postalCode: site.address.postal,
-    addressLocality: site.address.city,
-    addressCountry: "FR",
-  },
-  areaServed: { "@type": "Country", name: "France" },
-  sameAs: [site.social.linkedin, site.social.instagram, site.social.tiktok],
-});
+  "@graph": [
+    {
+      "@type": "LocalBusiness",
+      "@id": `${site.url}#localbusiness`,
+      name: site.name,
+      url: site.url,
+      email: site.email,
+      telephone: site.phones[0],
+      description: site.description,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: site.address.street,
+        postalCode: site.address.postal,
+        addressLocality: site.address.city,
+        addressCountry: "FR",
+      },
+      areaServed: { "@type": "Country", name: "France" },
+      sameAs: [site.social.linkedin, site.social.instagram, site.social.tiktok],
+      priceRange: "€€€",
+    },
+    {
+      "@type": "Organization",
+      "@id": `${site.url}#organization`,
+      name: site.name,
+      url: site.url,
+      logo: `${site.url}/images/brand/logo.png`,
+      sameAs: [site.social.linkedin, site.social.instagram, site.social.tiktok],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${site.url}#website`,
+      url: site.url,
+      name: site.name,
+      inLanguage: "fr-FR",
+      publisher: { "@id": `${site.url}#organization` },
+    },
+    ...expertises.map((e) => ({
+      "@type": "Service",
+      "@id": `${site.url}/expertises/${e.slug}#service`,
+      serviceType: e.title,
+      name: e.title,
+      description: e.short,
+      provider: { "@id": `${site.url}#localbusiness` },
+      areaServed: { "@type": "Country", name: "France" },
+      url: `${site.url}/expertises/${e.slug}`,
+    })),
+  ],
+};
+const jsonLd = JSON.stringify(jsonLdGraph);
 
 export default function RootLayout({
   children,
@@ -108,13 +143,8 @@ export default function RootLayout({
           Aller au contenu principal
         </a>
         {children}
-        <Script
-          id="ld-json-localbusiness"
-          type="application/ld+json"
-          strategy="afterInteractive"
-        >
-          {jsonLd}
-        </Script>
+        {/* Static JSON-LD graph — rendered inline so crawlers see it on first byte */}
+        <script type="application/ld+json">{jsonLd}</script>
       </body>
     </html>
   );

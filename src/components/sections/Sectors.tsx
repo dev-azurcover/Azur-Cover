@@ -10,7 +10,7 @@ export function Sectors() {
   return (
     <section
       id="sectors"
-      data-bg="3"
+
       aria-labelledby="sectors-h"
       className="py-[clamp(120px,18vw,200px)]"
     >
@@ -38,7 +38,7 @@ export function Sectors() {
             <ScrollReveal key={s.id} delay={120 + i * 100} as="li">
               <Link
                 href="/contact"
-                data-cursor="hover"
+
                 className="group relative block aspect-[4/5] overflow-hidden rounded-md bg-graphite"
               >
                 <Image

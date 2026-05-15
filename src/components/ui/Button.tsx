@@ -66,14 +66,14 @@ export function Button(props: LinkProps | ButtonProps) {
           target="_blank"
           rel="noreferrer noopener"
           className={cls}
-          data-cursor="hover"
+
         >
           <Inner arrow={arrow}>{children}</Inner>
         </a>
       );
     }
     return (
-      <Link href={props.href} className={cls} data-cursor="hover">
+      <Link href={props.href} className={cls}>
         <Inner arrow={arrow}>{children}</Inner>
       </Link>
     );
@@ -85,7 +85,7 @@ export function Button(props: LinkProps | ButtonProps) {
       onClick={props.onClick}
       disabled={props.disabled}
       className={cls}
-      data-cursor="hover"
+
     >
       <Inner arrow={arrow}>{children}</Inner>
     </button>

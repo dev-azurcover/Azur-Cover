@@ -23,7 +23,7 @@ export default function PressePage() {
           lead="Reconnaissances institutionnelles, partenariats, articles. Le travail d'Azur Cover dans la presse et sur le terrain politique."
         />
 
-        <section data-bg="3" className="pb-[clamp(120px,18vw,200px)]">
+        <section className="pb-[clamp(120px,18vw,200px)]">
           <Container size="narrow">
             <ul className="divide-y divide-line/60 border-y border-line/60">
               {pressItems.map((item, i) => (

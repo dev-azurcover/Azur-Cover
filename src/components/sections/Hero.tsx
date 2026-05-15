@@ -6,7 +6,7 @@ export function Hero() {
   return (
     <section
       id="hero"
-      data-bg="1"
+
       aria-labelledby="hero-h1"
       className="relative isolate flex min-h-[100svh] max-h-[920px] w-full items-center overflow-hidden"
     >

@@ -9,7 +9,7 @@ export function ClientsMarquee() {
   return (
     <section
       id="trusted"
-      data-bg="1"
+
       aria-labelledby="trusted-h"
       className="border-y border-line/40 py-16 md:py-20"
     >
@@ -32,7 +32,8 @@ export function ClientsMarquee() {
                 width={180}
                 height={48}
                 sizes="180px"
-                className="h-12 w-auto object-contain opacity-60 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0"
+                style={{ width: "auto", height: "48px" }}
+                className="object-contain opacity-60 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0"
               />
             </li>
           ))}
@@ -49,7 +50,8 @@ export function ClientsMarquee() {
               width={120}
               height={36}
               sizes="120px"
-              className="h-9 w-auto object-contain opacity-70 grayscale"
+              style={{ width: "auto", height: "36px" }}
+              className="object-contain opacity-70 grayscale"
             />
           </li>
         ))}

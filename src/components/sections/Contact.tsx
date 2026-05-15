@@ -8,7 +8,7 @@ export function Contact() {
   return (
     <section
       id="contact"
-      data-bg="4"
+
       aria-labelledby="contact-h"
       className="py-[clamp(120px,18vw,200px)]"
     >
@@ -65,7 +65,7 @@ export function Contact() {
                       <a
                         key={p}
                         href={`tel:${p.replace(/\s/g, "")}`}
-                        className="block hover:text-azur"
+                        className="block hover:text-azur-deep"
                       >
                         {p}
                       </a>
@@ -79,7 +79,7 @@ export function Contact() {
                   <dd className="mt-2 text-sm">
                     <a
                       href={`mailto:${site.email}?subject=Demande%20d%27audit`}
-                      className="text-ink hover:text-azur"
+                      className="text-ink hover:text-azur-deep"
                     >
                       {site.email}
                     </a>

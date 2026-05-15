@@ -14,7 +14,7 @@ export function LegalPage({ eyebrow, title, lead, blocks }: Props) {
   return (
     <>
       <PageHero eyebrow={eyebrow} title={title} lead={lead} />
-      <section data-bg="3" className="pb-[clamp(120px,18vw,200px)]">
+      <section className="pb-[clamp(120px,18vw,200px)]">
         <Container size="narrow">
           <div className="space-y-14">
             {blocks.map((block) => (

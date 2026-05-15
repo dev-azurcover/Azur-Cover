@@ -46,13 +46,15 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link href="/" className="inline-block" aria-label="Azur Cover - accueil">
-              <Image
-                src="/images/brand/logo-white.png"
-                alt="Azur Cover"
-                width={140}
-                height={64}
-                className="h-11 w-auto"
-              />
+              <div className="relative h-11 w-[96px]">
+                <Image
+                  src="/images/brand/logo-white.png"
+                  alt="Azur Cover"
+                  fill
+                  sizes="120px"
+                  className="object-contain"
+                />
+              </div>
             </Link>
             <p className="mt-5 max-w-[260px] text-sm leading-relaxed text-white/55">
               Expert national en performance thermique et étanchéité.

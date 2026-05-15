@@ -6,7 +6,7 @@ export function Proposition() {
   return (
     <section
       id="proposition"
-      data-bg="1"
+
       aria-labelledby="proposition-h"
       className="py-[clamp(120px,18vw,240px)]"
     >

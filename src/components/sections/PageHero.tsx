@@ -10,7 +10,7 @@ type Props = {
 export function PageHero({ eyebrow, title, lead }: Props) {
   return (
     <section
-      data-bg="1"
+
       className="pt-40 pb-20 md:pt-48 md:pb-28"
       aria-labelledby="page-hero-title"
     >

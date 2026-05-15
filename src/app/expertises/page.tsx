@@ -25,7 +25,7 @@ export default function ExpertisesIndex() {
           lead="Étanchéité, Cool Roofing, Azur Reflect, services connexes. Cliquez sur une expertise pour découvrir le détail technique, les bénéfices mesurés et nos références."
         />
 
-        <section data-bg="3" className="pb-[clamp(120px,18vw,200px)]">
+        <section className="pb-[clamp(120px,18vw,200px)]">
           <Container>
             <ul className="grid grid-cols-1 gap-px bg-line/60 md:grid-cols-2 [&>li]:bg-bg">
               {expertises.map((e, i) => (
@@ -33,7 +33,7 @@ export default function ExpertisesIndex() {
                   <Link
                     href={`/expertises/${e.slug}`}
                     className="group block h-full p-8 md:p-12"
-                    data-cursor="hover"
+
                   >
                     <div className="flex items-start justify-between gap-4">
                       <span className="font-mono text-[12px] uppercase tracking-[0.18em] text-muted">

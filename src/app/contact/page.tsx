@@ -24,7 +24,7 @@ export default function ContactPage() {
           lead="Vous décrivez votre bâtiment. Nous revenons sous 48 h avec une estimation de gains thermiques et un planning d'intervention. Le diagnostic est gratuit et sans engagement."
         />
 
-        <section data-bg="3" className="pb-[clamp(120px,18vw,200px)]">
+        <section className="pb-[clamp(120px,18vw,200px)]">
           <Container>
             <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 lg:gap-20">
               {/* Form */}
@@ -92,7 +92,7 @@ export default function ContactPage() {
                         <a
                           key={p}
                           href={`tel:${p.replace(/\s/g, "")}`}
-                          className="block text-ink hover:text-azur"
+                          className="block text-ink hover:text-azur-deep"
                           style={{ fontSize: "1.0625rem" }}
                         >
                           {p}
@@ -107,7 +107,7 @@ export default function ContactPage() {
                     <dd className="mt-2">
                       <a
                         href={`mailto:${site.email}`}
-                        className="text-ink hover:text-azur"
+                        className="text-ink hover:text-azur-deep"
                         style={{ fontSize: "1.0625rem" }}
                       >
                         {site.email}

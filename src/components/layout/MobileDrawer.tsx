@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { X } from "lucide-react";
@@ -9,20 +9,63 @@ import { site } from "@/content/site";
 
 type Props = { open: boolean; onClose: () => void };
 
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export function MobileDrawer({ open, onClose }: Props) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+
+    // Remember the trigger so we can restore focus on close
+    previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
+
+    // Move focus inside the dialog
+    const dialog = dialogRef.current;
+    const focusables = dialog?.querySelectorAll<HTMLElement>(FOCUSABLE);
+    focusables?.[0]?.focus();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      // Focus trap
+      if (e.key === "Tab" && dialog) {
+        const items = Array.from(
+          dialog.querySelectorAll<HTMLElement>(FOCUSABLE)
+        ).filter((el) => !el.hasAttribute("disabled"));
+        if (items.length === 0) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        const active = document.activeElement;
+
+        if (e.shiftKey && active === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
+
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
+      // Restore focus to the trigger
+      previouslyFocusedRef.current?.focus?.();
     };
   }, [open, onClose]);
 
   return (
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label="Menu de navigation"
@@ -35,13 +78,15 @@ export function MobileDrawer({ open, onClose }: Props) {
     >
       <div className="flex h-16 items-center justify-between px-6">
         <Link href="/" onClick={onClose} aria-label="Azur Cover - accueil">
-          <Image
-            src="/images/brand/logo.png"
-            alt="Azur Cover"
-            width={120}
-            height={55}
-            className="h-9 w-auto"
-          />
+          <div className="relative h-9 w-[78px]">
+            <Image
+              src="/images/brand/logo.png"
+              alt="Azur Cover"
+              fill
+              sizes="120px"
+              className="object-contain"
+            />
+          </div>
         </Link>
         <button
           type="button"

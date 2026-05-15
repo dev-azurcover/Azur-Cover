@@ -60,7 +60,7 @@ export function Methodology() {
   return (
     <section
       id="methodologie"
-      data-bg="4"
+
       aria-labelledby="methodologie-h"
       className="py-[clamp(120px,18vw,200px)]"
     >

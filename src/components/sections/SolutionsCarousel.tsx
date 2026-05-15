@@ -244,7 +244,7 @@ export function SolutionsCarousel() {
                     </ul>
                     <Link
                       href={`/expertises/${s.slug}`}
-                      data-cursor="hover"
+
                       className="underline-grow mt-8 inline-flex items-center gap-2 text-sm font-medium text-white"
                     >
                       {s.cta}
@@ -260,7 +260,7 @@ export function SolutionsCarousel() {
                   type="button"
                   onClick={() => goTo(active - 1)}
                   aria-label="Solution précédente"
-                  data-cursor="hover"
+
                   className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition hover:border-white/60 hover:bg-white/5"
                 >
                   ←
@@ -295,13 +295,23 @@ export function SolutionsCarousel() {
                   type="button"
                   onClick={() => goTo(active + 1)}
                   aria-label="Solution suivante"
-                  data-cursor="hover"
+
                   className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition hover:border-white/60 hover:bg-white/5"
                 >
                   →
                 </button>
 
-                <span className="ml-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
+                {paused && (
+                  <span
+                    aria-live="polite"
+                    className="ml-2 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-azur"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-azur" />
+                    En pause
+                  </span>
+                )}
+
+                <span className="ml-auto font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
                   {String(active + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
                 </span>
               </div>
@@ -362,7 +372,7 @@ export function SolutionsCarousel() {
                 ref={(el) => { planetRefs.current[i] = el; }}
                 onClick={() => goTo(i)}
                 aria-label={`Voir ${s.title}`}
-                data-cursor="hover"
+
                 className={cn(
                   "planet group absolute left-0 top-0 h-[clamp(280px,30vw,420px)] w-[clamp(280px,30vw,420px)] overflow-visible rounded-full",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azur focus-visible:ring-offset-4 focus-visible:ring-offset-[#0e0e11]"

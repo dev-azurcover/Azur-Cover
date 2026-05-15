@@ -25,12 +25,12 @@ export default function RealisationsIndex() {
           lead="Sélection de chantiers récents qui illustrent notre savoir-faire dans la performance thermique et l'étanchéité — bâtiments tertiaires, industriels et publics."
         />
 
-        <section data-bg="3" className="pb-[clamp(120px,18vw,200px)]">
+        <section className="pb-[clamp(120px,18vw,200px)]">
           <Container>
             <ul className="grid grid-cols-1 gap-x-6 gap-y-16 md:grid-cols-2 md:gap-y-20 lg:gap-y-24">
               {realisations.map((r, i) => (
                 <ScrollReveal as="li" key={r.slug} delay={Math.min(i, 6) * 60}>
-                  <Link href={`/realisations/${r.slug}`} className="group block" data-cursor="hover">
+                  <Link href={`/realisations/${r.slug}`} className="group block">
                     <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-graphite/5">
                       <Image
                         src={r.image.src}

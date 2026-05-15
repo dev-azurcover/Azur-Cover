@@ -25,7 +25,7 @@ export default function AboutPage() {
         />
 
         {/* Long-form story blocks */}
-        <section data-bg="3" className="py-[clamp(120px,18vw,200px)]">
+        <section className="py-[clamp(120px,18vw,200px)]">
           <Container size="narrow">
             <div className="space-y-20 md:space-y-28">
               {about.blocks.map((block, i) => (
@@ -56,7 +56,7 @@ export default function AboutPage() {
         </section>
 
         {/* Pillars */}
-        <section data-bg="4" className="border-y border-line/60 py-[clamp(120px,18vw,200px)]">
+        <section className="border-y border-line/60 py-[clamp(120px,18vw,200px)]">
           <Container>
             <Eyebrow>Trois piliers</Eyebrow>
             <h2
@@ -101,7 +101,7 @@ export default function AboutPage() {
         </section>
 
         {/* CTA */}
-        <section data-bg="4" className="py-20">
+        <section className="py-20">
           <Container>
             <div className="flex flex-col items-start gap-6">
               <h2

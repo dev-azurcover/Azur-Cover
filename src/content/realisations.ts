@@ -17,26 +17,22 @@ export type Realisation = {
   image: { src: string; alt: string };
 };
 
+// Source : pages /realisations-tertiaire/* du site azurcover.com
+// (scrapées via Googlebot UA). Quand la page n'avait pas de description
+// détaillée, on se contente de la fiche technique pour ne pas inventer.
 export const realisations: Realisation[] = [
   {
     slug: "promocash",
-    title: "Toiture PromoCash",
+    title: "Promocash",
     client: "Promocash",
     city: "Grasse",
     solution: "Cool Roofing",
     surface: "2 700 m²",
     duration: "3 semaines",
     year: "2024",
-    short:
-      "Application Cool Roofing sur la toiture industrielle de l'enseigne. Réduction immédiate des températures de surface et baisse mesurée de la consommation climatisation.",
+    short: "Application Cool Roofing sur la toiture industrielle PromoCash de Grasse.",
     story: [
-      "L'entrepôt PromoCash de Grasse cumulait deux contraintes : une toiture de 2 700 m² très exposée au sud, et une climatisation poussée à fond pour préserver la chaîne du froid des produits frais.",
-      "Notre équipe a appliqué le revêtement Cool Roofing à l'aérogel de silice sur l'intégralité de la toiture en bac acier. Trois semaines de chantier, sans aucune interruption d'activité — l'enseigne a continué d'opérer en parallèle.",
-      "À la livraison, les températures de surface mesurées en plein été sont passées de 78 °C avant intervention à 28 °C après. Le contrat d'entretien annuel garantit le maintien des performances dans la durée.",
-    ],
-    results: [
-      { value: "−50°C", label: "en surface de toiture" },
-      { value: "2 700 m²", label: "traités en 3 semaines" },
+      "Application du revêtement Cool Roofing sur l'intégralité de la toiture industrielle de PromoCash à Grasse.",
     ],
     image: {
       src: "/images/realisations/promocash.jpg",
@@ -59,8 +55,7 @@ export const realisations: Realisation[] = [
       "Les relevés ont été sans appel. Lors des pics de chaleur, nous avons enregistré une différence moyenne de 3 à 4 °C en faveur des classes équipées. Confort visuel : contrairement aux couvertures de survie, Azur Reflect préserve la lumière naturelle et la transparence du verre.",
     ],
     results: [
-      { value: "−4°C", label: "vs classes témoins, en pic chaleur" },
-      { value: "100%", label: "lumière naturelle préservée" },
+      { value: "3 à 4 °C", label: "vs classes témoins, en pic chaleur" },
     ],
     image: {
       src: "/images/realisations/ecole-cannes.jpg",
@@ -69,18 +64,16 @@ export const realisations: Realisation[] = [
   },
   {
     slug: "netto-grasse",
-    title: "Toiture Netto",
+    title: "Netto",
     client: "Netto",
     city: "Grasse",
     solution: "Cool Roofing",
     surface: "1 800 m²",
     duration: "3 semaines",
     year: "2023",
-    short:
-      "Étanchéité réflective et Cool Roofing sur la toiture du magasin. Préservation de la chaîne du froid alimentaire et économies de climatisation immédiates.",
+    short: "Cool Roofing sur la toiture du magasin Netto à Grasse.",
     story: [
-      "Magasin alimentaire de 1 800 m² avec contrainte forte de chaîne du froid. La toiture montait à 75 °C en surface en pic d'été, contraignant la climatisation à tourner en continu et augmentant l'usure des compresseurs.",
-      "Intervention combinée : reprise des points faibles d'étanchéité, puis application du revêtement Cool Roofing sur l'ensemble de la toiture. Trois semaines de chantier sans fermeture du magasin.",
+      "Application Cool Roofing sur la toiture du magasin Netto de Grasse.",
     ],
     image: {
       src: "/images/realisations/netto.jpg",
@@ -89,17 +82,17 @@ export const realisations: Realisation[] = [
   },
   {
     slug: "uexpress-saint-laurent",
-    title: "Façade vitrée U Express",
+    title: "U Express",
     client: "U Express",
     city: "Saint-Laurent-du-Var",
     solution: "Azur Reflect",
     duration: "2 jours",
     year: "2024",
     short:
-      "Vitrines commerciales traitées Azur Reflect. Stop chaleur sans perte de transparence — la visibilité commerciale reste intacte.",
+      "Vitrines commerciales d'un U Express traitées Azur Reflect. Stop chaleur sans perte de transparence.",
     story: [
-      "Situé près de Nice, ce U Express dispose d'une large devanture vitrée. Si cette visibilité est un atout commercial, elle exposait la zone d'entrée et les premiers rayons à un rayonnement solaire intense, augmentant la température intérieure et sollicitant la climatisation de manière excessive.",
-      "Nos équipes ont procédé à l'application de la solution Azur Reflect sur l'intégralité de la façade vitrée. L'objectif : stopper la chaleur tout en conservant la transparence pour laisser voir l'intérieur du magasin aux passants.",
+      "Situé près de Nice, U Express dispose d'une large devanture vitrée. Si cette visibilité est un atout commercial, elle exposait la zone d'entrée et les premiers rayons à un rayonnement solaire intense, augmentant la température intérieure et sollicitant l'installation de climatisation de manière excessive.",
+      "Nos équipes ont procédé à l'application de la solution Azur Reflect sur l'intégralité de la façade vitrée. L'objectif : stopper la chaleur tout en conservant une transparence pour laisser voir l'intérieur du magasin aux passants.",
     ],
     image: {
       src: "/images/realisations/netto.jpg",
@@ -114,11 +107,9 @@ export const realisations: Realisation[] = [
     solution: "Azur Reflect",
     duration: "3 jours",
     year: "2024",
-    short:
-      "Vitrages d'un service du CHU traités Azur Reflect. Confort thermique pour les patients et le personnel soignant.",
+    short: "Intervention Azur Reflect au Centre Hospitalier de Grasse.",
     story: [
-      "Intervention dans un établissement public de santé, avec contraintes opérationnelles fortes : aucune interruption possible des soins, fenêtres traitées depuis l'extérieur uniquement, absence totale d'odeur ou de nuisance.",
-      "Trois jours de chantier, équipes formées au protocole hospitalier, validation à chaque étape par les services techniques de l'hôpital.",
+      "Intervention au Centre Hospitalier de Grasse — application du vernis Azur Reflect.",
     ],
     image: {
       src: "/images/realisations/promocash.jpg",
@@ -133,11 +124,9 @@ export const realisations: Realisation[] = [
     solution: "Cool Roofing",
     duration: "1 semaine",
     year: "2024",
-    short:
-      "Toiture de la mairie traitée Cool Roofing. Marché public, livraison conforme aux délais et au cahier des charges architectural.",
+    short: "Cool Roofing sur la mairie de Fayence (83440).",
     story: [
-      "Bâtiment communal classé en zone patrimoniale. Notre teinte blanc cassé respecte les contraintes d'urbanisme et d'intégration paysagère, tout en délivrant les performances réflectives attendues.",
-      "Marché public mené dans les délais avec validation des Bâtiments de France.",
+      "Application Cool Roofing sur la toiture de la mairie de Fayence.",
     ],
     image: {
       src: "/images/realisations/ecole-cannes.jpg",
@@ -152,11 +141,8 @@ export const realisations: Realisation[] = [
     solution: "Azur Reflect",
     duration: "1 jour",
     year: "2024",
-    short:
-      "Application express d'Azur Reflect sur les vitrages du magasin bio. Une journée d'intervention, zéro perturbation pour les clients.",
-    story: [
-      "Réseau de magasins bio, vitrines traitées sur la façade sud très exposée. Une journée d'intervention en horaires décalés.",
-    ],
+    short: "Application Azur Reflect chez Marcel & Fils, La Fare-les-Oliviers.",
+    story: ["Intervention Azur Reflect chez Marcel & Fils."],
     image: {
       src: "/images/realisations/netto.jpg",
       alt: "Vitrines Marcel & Fils traitées Azur Reflect",
@@ -164,17 +150,14 @@ export const realisations: Realisation[] = [
   },
   {
     slug: "satoriz-antibes",
-    title: "Satoriz Antibes",
+    title: "Satoriz",
     client: "Satoriz Magasins Bio",
     city: "Antibes",
     solution: "Azur Reflect",
     duration: "1 jour",
     year: "2024",
-    short:
-      "Vitrages du magasin bio antibois traités Azur Reflect. Confort des clients et des produits sensibles à la chaleur.",
-    story: [
-      "Magasin bio sur Antibes, vitrines exposées plein sud avec impact sur la conservation des produits frais en rayon. Intervention sur une journée, gain immédiat sur la régulation thermique.",
-    ],
+    short: "Application Azur Reflect chez Satoriz à Antibes.",
+    story: ["Intervention Azur Reflect chez Satoriz à Antibes."],
     image: {
       src: "/images/realisations/netto.jpg",
       alt: "Vitrines Satoriz Antibes traitées Azur Reflect",
@@ -182,17 +165,14 @@ export const realisations: Realisation[] = [
   },
   {
     slug: "intermarche-nice",
-    title: "Intermarché Nice",
+    title: "Intermarché",
     client: "Intermarché",
     city: "Nice",
     solution: "Azur Reflect",
     duration: "2 jours",
     year: "2024",
-    short:
-      "Vitrines et façade d'un Intermarché niçois traitées Azur Reflect. Réduction immédiate de la sollicitation des climatisations.",
-    story: [
-      "Magasin Intermarché niçois, application sur la totalité des baies vitrées de la galerie. Deux jours d'intervention en planifiant les phases sur les zones non commerciales.",
-    ],
+    short: "Application Azur Reflect dans un Intermarché à Nice.",
+    story: ["Intervention Azur Reflect chez Intermarché à Nice."],
     image: {
       src: "/images/realisations/netto.jpg",
       alt: "Vitrines Intermarché Nice traitées Azur Reflect",
@@ -206,11 +186,8 @@ export const realisations: Realisation[] = [
     solution: "Cool Roofing",
     duration: "1 semaine",
     year: "2024",
-    short:
-      "Toitures d'équipements publics municipaux traitées Cool Roofing. Marché public mené sous délais courts.",
-    story: [
-      "Marché public sur plusieurs équipements municipaux. Coordination avec les services techniques de la commune, livraison sous une semaine, mesures de performance documentées.",
-    ],
+    short: "Intervention Cool Roofing pour la commune de Vitrolles.",
+    story: ["Intervention Cool Roofing pour la commune de Vitrolles."],
     image: {
       src: "/images/realisations/promocash.jpg",
       alt: "Équipement public à Vitrolles traité Cool Roofing",
@@ -225,10 +202,9 @@ export const realisations: Realisation[] = [
     duration: "1 semaine",
     year: "2024",
     short:
-      "Toiture bac acier d'un laboratoire pharmaceutique traitée Cool Roofing. Préservation des conditions de température réglementaires en intérieur.",
+      "Cool Roofing sur la toiture bac acier du Laboratoire Braja Vesigné, Gardanne.",
     story: [
-      "Laboratoire avec contraintes de température intérieure réglementées. Toiture bac acier de surface importante, exposée plein sud à Gardanne.",
-      "Application du revêtement Cool Roofing sur l'ensemble de la toiture en une semaine. Suivi par sonde pour valider la stabilité thermique post-intervention.",
+      "Intervention Cool Roofing sur une toiture bac acier au Laboratoire Braja Vesigné à Gardanne.",
     ],
     image: {
       src: "/images/realisations/promocash.jpg",
@@ -243,11 +219,9 @@ export const realisations: Realisation[] = [
     solution: "Azur Reflect",
     duration: "1 jour",
     year: "2024",
-    short:
-      "Vitrages d'un EHPAD traités Azur Reflect. Confort thermique pour les résidents, intervention en une journée.",
+    short: "Application Azur Reflect à l'EHPAD Le Petit Paris à Grasse.",
     story: [
-      "Établissement accueillant des personnes âgées, particulièrement sensibles aux pics de chaleur estivale. Intervention en une journée, sans perturbation du quotidien des résidents.",
-      "Le personnel a noté une amélioration immédiate du confort dans les chambres exposées au sud dès la fin de l'intervention.",
+      "Application du vernis Azur Reflect à l'EHPAD Le Petit Paris à Grasse.",
     ],
     image: {
       src: "/images/realisations/ecole-cannes.jpg",

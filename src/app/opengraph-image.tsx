@@ -97,8 +97,8 @@ export default async function OG() {
               lineHeight: 1.4,
             }}
           >
-            Jusqu&apos;à −12 °C en intérieur, sans climatisation. Solution
-            unique en région PACA.
+            Étanchéité, cool roofing, vernis anti-chaleur Azur Reflect pour
+            vitrages.
           </div>
         </div>
 

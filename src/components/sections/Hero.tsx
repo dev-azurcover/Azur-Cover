@@ -60,8 +60,8 @@ export function Hero() {
             className="mt-8 max-w-[520px] text-ink/65"
             style={{ fontSize: "1.25rem", lineHeight: 1.5, fontWeight: 400 }}
           >
-            Jusqu&apos;à −12 °C en intérieur, sans climatisation. Solution unique
-            en région PACA.
+            Étanchéité, cool roofing, vernis anti-chaleur Azur Reflect.
+            Solutions anti-chaleur et performance thermique pour vos bâtiments.
           </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">

@@ -17,10 +17,10 @@ export default function MentionsLegales() {
         {
           heading: "Éditeur",
           paragraphs: [
-            `Le site ${site.url} est édité par Azur Cover SAS.`,
+            `Le site ${site.url} est édité par Azur Cover.`,
             `Siège social : ${site.address.full}, ${site.address.country}.`,
-            `${site.trust.siret}.`,
             `Email : ${site.email} — Téléphone : ${site.phones[0]}.`,
+            `Forme juridique, capital social, SIRET et numéro de TVA : à compléter par l'éditeur.`,
             `Directeur de la publication : représentant légal de Azur Cover.`,
           ],
         },

@@ -59,35 +59,44 @@ export function Footer() {
             <p className="mt-5 max-w-[260px] text-sm leading-relaxed text-white/55">
               Expert national en performance thermique et étanchéité.
             </p>
-            <div className="mt-6 flex gap-3">
-              <a
-                href={site.social.instagram}
-                target="_blank"
-                rel="noreferrer noopener"
-                aria-label="Instagram"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/15 text-white/70 transition hover:border-white/40 hover:text-white"
-              >
-                <InstagramIcon className="h-4 w-4" />
-              </a>
-              <a
-                href={site.social.linkedin}
-                target="_blank"
-                rel="noreferrer noopener"
-                aria-label="LinkedIn"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/15 text-white/70 transition hover:border-white/40 hover:text-white"
-              >
-                <LinkedinIcon className="h-4 w-4" />
-              </a>
-              <a
-                href={site.social.tiktok}
-                target="_blank"
-                rel="noreferrer noopener"
-                aria-label="TikTok"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/15 text-white/70 transition hover:border-white/40 hover:text-white"
-              >
-                <TiktokIcon className="h-4 w-4" />
-              </a>
-            </div>
+            {/* Social icons rendered only when URLs are provided in site.social */}
+            {(site.social.instagram || site.social.linkedin || site.social.tiktok) && (
+              <div className="mt-6 flex gap-3">
+                {site.social.instagram && (
+                  <a
+                    href={site.social.instagram}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label="Instagram"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/15 text-white/70 transition hover:border-white/40 hover:text-white"
+                  >
+                    <InstagramIcon className="h-4 w-4" />
+                  </a>
+                )}
+                {site.social.linkedin && (
+                  <a
+                    href={site.social.linkedin}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label="LinkedIn"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/15 text-white/70 transition hover:border-white/40 hover:text-white"
+                  >
+                    <LinkedinIcon className="h-4 w-4" />
+                  </a>
+                )}
+                {site.social.tiktok && (
+                  <a
+                    href={site.social.tiktok}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label="TikTok"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/15 text-white/70 transition hover:border-white/40 hover:text-white"
+                  >
+                    <TiktokIcon className="h-4 w-4" />
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           <div>

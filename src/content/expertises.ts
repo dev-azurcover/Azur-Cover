@@ -43,11 +43,7 @@ export const expertises: Expertise[] = [
         "La toiture réfléchissante repose sur l'application d'une membrane de couleur blanche qui joue un rôle clé sur deux aspects : la réflectivité et la longévité du toit. En renvoyant une partie de la chaleur solaire, elle permet de maintenir une température intérieure plus fraîche et plus stable, tout en limitant les chocs thermiques sur la membrane.",
       ],
     },
-    kpis: [
-      { value: "+45", label: "années d'expertise" },
-      { value: "100%", label: "garantie décennale" },
-      { value: "3", label: "technologies maîtrisées" },
-    ],
+    kpis: [],
     sections: [
       {
         title: "Étanchéité en membrane bitumineuse réflective",
@@ -152,7 +148,6 @@ export const expertises: Expertise[] = [
       "Aérogel de silice (issu du domaine spatial)",
       "Application sans travaux lourds, sans interruption d'activité",
       "Prolonge la durée de vie de l'étanchéité",
-      "ROI typique sous 3 ans",
       "Certifications CSTB · B-ROOF T3",
     ],
     cta: "Demander un diagnostic gratuit",
@@ -256,11 +251,7 @@ export const expertises: Expertise[] = [
         "Toutes nos prestations partagent la même rigueur : étude technique préalable, équipes certifiées, garantie écrite, suivi long terme.",
       ],
     },
-    kpis: [
-      { value: "SS4", label: "certification désamiantage" },
-      { value: "70%", label: "lumière naturelle préservée (Laque Solaire)" },
-      { value: "Annuel", label: "contrats d'entretien" },
-    ],
+    kpis: [],
     sections: [
       {
         title: "Contrats d'entretien toiture",

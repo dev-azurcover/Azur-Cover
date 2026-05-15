@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Nos expertises",
   description:
     "Étanchéité, Cool Roofing, Azur Reflect et services connexes. Quatre savoir-faire complémentaires pour la performance thermique des bâtiments.",
+  alternates: { canonical: "/expertises" },
 };
 
 export default function ExpertisesIndex() {

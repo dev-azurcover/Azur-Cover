@@ -9,6 +9,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { CountUp } from "@/components/motion/CountUp";
+import { BreadcrumbJsonLd } from "@/lib/breadcrumb";
 import { expertises, getExpertise } from "@/content/expertises";
 import { realisations } from "@/content/realisations";
 
@@ -27,6 +28,7 @@ export async function generateMetadata({
   return {
     title: e.title,
     description: e.short,
+    alternates: { canonical: `/expertises/${e.slug}` },
   };
 }
 
@@ -58,6 +60,13 @@ export default async function ExpertisePage({
   return (
     <>
       <Header />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", url: "/" },
+          { name: "Expertises", url: "/expertises" },
+          { name: e.title, url: `/expertises/${e.slug}` },
+        ]}
+      />
       <main id="main">
         {/* Hero with image */}
         <section

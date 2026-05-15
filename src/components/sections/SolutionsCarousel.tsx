@@ -215,8 +215,9 @@ export function SolutionsCarousel() {
           <div
             role="tabpanel"
             id={`panel-${current.slug}`}
-            aria-labelledby={`tab-${current.slug}`}
-            className="col-span-5 flex items-center pl-[clamp(40px,6vw,120px)] pr-8 z-20"
+            aria-labelledby={`tab-a11y-${current.slug}`}
+            tabIndex={0}
+            className="col-span-5 flex items-center pl-[clamp(40px,6vw,120px)] pr-8 z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azur focus-visible:ring-offset-4 focus-visible:ring-offset-[#0e0e11]"
           >
             <div className="w-full max-w-[460px]">
               <Eyebrow tone="white" id="solutions-h">

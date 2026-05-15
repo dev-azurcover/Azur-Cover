@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: "FAQ",
   description:
     "Réponses détaillées à toutes vos questions sur le Cool Roofing, Azur Reflect, l'étanchéité et nos méthodes.",
+  alternates: { canonical: "/faq" },
 };
 
 export default function FAQPage() {

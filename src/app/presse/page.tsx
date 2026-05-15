@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "Presse",
   description:
     "Toutes les actualités d'Azur Cover : presse, partenariats, reconnaissances institutionnelles.",
+  alternates: { canonical: "/presse" },
 };
 
 export default function PressePage() {

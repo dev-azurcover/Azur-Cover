@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Mentions légales",
   description:
     "Mentions légales du site azurcover.com — éditeur, hébergement, propriété intellectuelle.",
+  alternates: { canonical: "/mentions-legales" },
 };
 
 export default function MentionsLegales() {

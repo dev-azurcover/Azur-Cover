@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Politique de confidentialité",
   description:
     "Politique de confidentialité d'Azur Cover — données personnelles, RGPD, cookies.",
+  alternates: { canonical: "/confidentialite" },
 };
 
 export default function PrivacyPage() {

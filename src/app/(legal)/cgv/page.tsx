@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Conditions Générales de Vente",
   description:
     "Conditions générales de vente d'Azur Cover — interventions étanchéité, Cool Roofing, Azur Reflect.",
+  alternates: { canonical: "/cgv" },
 };
 
 export default function CGVPage() {

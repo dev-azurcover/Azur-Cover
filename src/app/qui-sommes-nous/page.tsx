@@ -11,6 +11,7 @@ import { about } from "@/content/about";
 export const metadata: Metadata = {
   title: about.meta.title,
   description: about.meta.description,
+  alternates: { canonical: "/qui-sommes-nous" },
 };
 
 export default function AboutPage() {

@@ -8,6 +8,7 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { CountUp } from "@/components/motion/CountUp";
+import { BreadcrumbJsonLd } from "@/lib/breadcrumb";
 import { realisations, getRealisation } from "@/content/realisations";
 
 export function generateStaticParams() {
@@ -25,6 +26,7 @@ export async function generateMetadata({
   return {
     title: r.title,
     description: r.short,
+    alternates: { canonical: `/realisations/${r.slug}` },
   };
 }
 
@@ -44,6 +46,13 @@ export default async function RealisationPage({
   return (
     <>
       <Header />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", url: "/" },
+          { name: "Réalisations", url: "/realisations" },
+          { name: r.title, url: `/realisations/${r.slug}` },
+        ]}
+      />
       <main id="main">
         {/* Hero */}
         <section className="pt-40 pb-12 md:pt-48 md:pb-16" aria-labelledby="r-h1">

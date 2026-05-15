@@ -4,6 +4,7 @@ import { LegalPage } from "@/components/sections/LegalPage";
 export const metadata: Metadata = {
   title: "Politique cookies",
   description: "Politique cookies — Azur Cover.",
+  alternates: { canonical: "/cookies" },
 };
 
 export default function CookiesPage() {

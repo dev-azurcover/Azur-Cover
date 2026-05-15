@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Réalisations",
   description:
     "Quelques chantiers récents : PromoCash, École Jacqueline de Romilly à Cannes, Netto, U Express, CHU de Grasse, Vitrolles…",
+  alternates: { canonical: "/realisations" },
 };
 
 export default function RealisationsIndex() {

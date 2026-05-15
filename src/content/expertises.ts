@@ -24,7 +24,7 @@ export const expertises: Expertise[] = [
     short:
       "Diagnostic, reprise, garantie. Tous types de toitures, avec en option l'étanchéité réflective qui combine étanchéité et performance thermique.",
     hero: {
-      eyebrow: "01 — Expertise",
+      eyebrow: "01. Expertise",
       title: "Étanchéité.",
       lead:
         "Diagnostic, reprise, garantie. Azur Cover intervient sur tous types de toitures avec, en option, l'étanchéité réflective : un revêtement blanc qui combine étanchéité et performance thermique en une seule intervention.",
@@ -33,7 +33,7 @@ export const expertises: Expertise[] = [
       title: "Le problème",
       body: [
         "Les toitures sont parmi les parties d'un bâtiment les plus exposées aux intempéries : vent, pluie, neige, grêle. Qu'elles soient accessibles ou non, leur étanchéité n'est pas une option : une défaillance peut rapidement entraîner des infiltrations d'eau et des dommages difficiles à contenir.",
-        "Les conséquences d'une mauvaise étanchéité sont souvent sous-estimées. Humidité persistante, moisissures, murs fissurés — ces désordres touchent autant l'intérieur que l'extérieur du bâtiment. Dans les cas les plus sérieux, c'est l'isolation ou la charpente qui est atteinte, avec des coûts de réparation considérables.",
+        "Les conséquences d'une mauvaise étanchéité sont souvent sous-estimées. Humidité persistante, moisissures, murs fissurés. ces désordres touchent autant l'intérieur que l'extérieur du bâtiment. Dans les cas les plus sérieux, c'est l'isolation ou la charpente qui est atteinte, avec des coûts de réparation considérables.",
       ],
     },
     solution: {
@@ -55,7 +55,7 @@ export const expertises: Expertise[] = [
       {
         title: "Étanchéité en membrane synthétique",
         body: [
-          "Les membranes synthétiques (EPDM, PVC ou TPO) s'adaptent à tous les types de supports — béton, acier, bois — et à toutes les formes de toiture. Discrètes et polyvalentes, elles se posent par fixation mécanique, parfois à l'aide d'une colle.",
+          "Les membranes synthétiques (EPDM, PVC ou TPO) s'adaptent à tous les types de supports. béton, acier, bois. et à toutes les formes de toiture. Discrètes et polyvalentes, elles se posent par fixation mécanique, parfois à l'aide d'une colle.",
           "Légères, résistantes, disponibles dans une large gamme de coloris. Les versions réflectives sont particulièrement appréciées : en accumulant moins la chaleur, elles contribuent à réduire les phénomènes de dilatation thermique et améliorent le confort intérieur.",
         ],
       },
@@ -63,8 +63,8 @@ export const expertises: Expertise[] = [
         title: "Étanchéité liquide réflective",
         body: [
           "L'étanchéité liquide est une solution polyvalente, adaptée aussi bien aux grandes surfaces qu'aux espaces plus restreints, circulables ou non. Elle répond à une grande variété de situations : protections sous carrelage ou dalles amovibles, coupoles en béton, terrasses techniques.",
-          "La mise en service est rapide — la surface est circulable en 24 à 72 heures après application. Une fois polymérisée, la membrane forme un film continu et sans joints, offrant une excellente adhérence sur tous types de support et une bonne résistance aux poinçonnements, statique comme dynamique.",
-          "Sur le plan thermique, cette solution réduit la conduction de chaleur dans le bâtiment dès son application. Particulièrement adaptée à la rénovation, elle permet de redonner vie à des surfaces endommagées sans recourir à des protections lourdes — un levier intéressant pour la performance globale du bâtiment.",
+          "La mise en service est rapide. la surface est circulable en 24 à 72 heures après application. Une fois polymérisée, la membrane forme un film continu et sans joints, offrant une excellente adhérence sur tous types de support et une bonne résistance aux poinçonnements, statique comme dynamique.",
+          "Sur le plan thermique, cette solution réduit la conduction de chaleur dans le bâtiment dès son application. Particulièrement adaptée à la rénovation, elle permet de redonner vie à des surfaces endommagées sans recourir à des protections lourdes. un levier intéressant pour la performance globale du bâtiment.",
         ],
       },
     ],
@@ -89,7 +89,7 @@ export const expertises: Expertise[] = [
     short:
       "Revêtement haute performance enrichi à l'aérogel de silice. Réfléchit 80 à 90 % du rayonnement solaire. −4 à −8 °C à l'intérieur, jusqu'à 40 % d'économies sur la climatisation.",
     hero: {
-      eyebrow: "02 — Expertise",
+      eyebrow: "02. Expertise",
       title: "Cool Roofing.",
       lead:
         "70 % des apports de chaleur passent par la toiture. Notre revêtement haute performance, enrichi à l'aérogel de silice, en réfléchit 80 à 90 %. Résultat : −30 à −50 °C en surface de toiture, −4 à −8 °C à l'intérieur, jusqu'à 40 % d'économies sur la climatisation.",
@@ -99,7 +99,7 @@ export const expertises: Expertise[] = [
       body: [
         "Dans la majorité des bâtiments, jusqu'à 70 % des apports de chaleur proviennent de la toiture. Sous l'effet du rayonnement solaire, une toiture classique peut atteindre 70 à 80 °C en été, transformant le bâtiment en véritable accumulateur thermique.",
         "Résultat : la chaleur pénètre en continu, les températures intérieures deviennent difficiles à maîtriser, et les systèmes de climatisation fonctionnent en surcharge permanente. Les consommations énergétiques peuvent dépasser 30 à 50 % de hausse, avec une usure accélérée des équipements.",
-        "Les solutions traditionnelles — isolation seule, climatisation, membranes standards — ne traitent pas la cause réelle : l'absorption du rayonnement solaire. Pire, les cycles thermiques répétés provoquent une dilatation constante des matériaux, ce qui accélère le vieillissement des membranes d'étanchéité.",
+        "Les solutions traditionnelles. isolation seule, climatisation, membranes standards. ne traitent pas la cause réelle : l'absorption du rayonnement solaire. Pire, les cycles thermiques répétés provoquent une dilatation constante des matériaux, ce qui accélère le vieillissement des membranes d'étanchéité.",
       ],
     },
     solution: {
@@ -119,7 +119,7 @@ export const expertises: Expertise[] = [
         title: "L'aérogel de silice : un matériau venu du spatial",
         body: [
           "Certains matériaux ne sont pas conçus pour le bâtiment. Ils sont développés pour des environnements où la maîtrise de la chaleur est critique. Dans le domaine spatial, notamment au sein d'organisations comme la NASA, la gestion des écarts de température est un enjeu majeur : protéger des structures exposées à des conditions extrêmes.",
-          "C'est dans ce contexte qu'a été utilisé un matériau hors norme : l'aérogel de silice. Sa structure unique, composée en grande partie d'air, lui permet d'atteindre une conductivité thermique extrêmement faible — l'un des isolants les plus performants au monde.",
+          "C'est dans ce contexte qu'a été utilisé un matériau hors norme : l'aérogel de silice. Sa structure unique, composée en grande partie d'air, lui permet d'atteindre une conductivité thermique extrêmement faible. l'un des isolants les plus performants au monde.",
           "Chez Azur Cover, nous avons choisi de l'intégrer au cœur de notre revêtement. L'aérogel modifie la structure même du produit, en lui apportant une densité et une homogénéité supérieures. Après application, le revêtement forme une membrane continue directement liée à l'étanchéité existante.",
         ],
       },
@@ -165,7 +165,7 @@ export const expertises: Expertise[] = [
     short:
       "Vernis transparent appliqué sur l'extérieur des vitrages. Bloque 99 % des UV et 90 % des IR sans réduire la luminosité. Jusqu'à −12 °C en intérieur.",
     hero: {
-      eyebrow: "03 — Expertise",
+      eyebrow: "03. Expertise",
       title: "Azur Reflect.",
       lead:
         "Un vernis transparent appliqué directement sur l'extérieur des vitrages. Bloque la chaleur sans réduire la luminosité, sans se décoller comme les films traditionnels. Renvoie 99 % des UV et 90 % des IR. Jusqu'à −12 °C en intérieur mesurés chez nos clients.",
@@ -174,7 +174,7 @@ export const expertises: Expertise[] = [
       title: "Le problème",
       body: [
         "Dans de nombreux bâtiments, les vitrages deviennent une véritable source de surchauffe. Les films solaires, souvent utilisés comme solution, finissent par se décoller et perdent rapidement en efficacité.",
-        "Résultat : la chaleur s'installe durablement, les espaces deviennent inconfortables — notamment dans les écoles, bureaux et commerces — et les systèmes de climatisation fonctionnent en permanence, entraînant une surconsommation énergétique.",
+        "Résultat : la chaleur s'installe durablement, les espaces deviennent inconfortables. notamment dans les écoles, bureaux et commerces. et les systèmes de climatisation fonctionnent en permanence, entraînant une surconsommation énergétique.",
         "Ces solutions temporaires ne traitent pas le fond du problème et finissent par impacter la performance globale des bâtiments ainsi que le confort des occupants.",
       ],
     },
@@ -234,7 +234,7 @@ export const expertises: Expertise[] = [
     short:
       "Contrats d'entretien, encapsulation amiante (équipes SS4 certifiées), Laque Solaire pour skydomes et verrières, peinture façade et intérieur à l'aérogel de silice.",
     hero: {
-      eyebrow: "04 — Expertise",
+      eyebrow: "04. Expertise",
       title: "Autres expertises.",
       lead:
         "Contrats d'entretien annuels, encapsulation d'amiante, Laque Solaire pour skydomes, peinture technique pour façades et intérieurs. Pour les sujets connexes à la performance thermique de votre bâtiment, Azur Cover reste votre interlocuteur unique.",
@@ -265,14 +265,14 @@ export const expertises: Expertise[] = [
         body: [
           "Sur de nombreuses toitures anciennes en fibrociment, la présence d'amiante devient un problème avec le temps : le matériau se dégrade, devient poreux et fragile, et expose à des contraintes importantes dès qu'une intervention est envisagée.",
           "Notre revêtement technique permet d'encapsuler l'amiante en toiture, en créant une membrane continue qui stabilise le support, limite durablement les émissions de fibres et protège la couverture contre les agressions climatiques. Intervention par nos équipes certifiées SS4.",
-          "Bénéfice secondaire : ce traitement améliore le comportement thermique de la toiture en limitant les échanges de chaleur — surchauffes estivales et pertes hivernales réduites, gains énergétiques concrets.",
+          "Bénéfice secondaire : ce traitement améliore le comportement thermique de la toiture en limitant les échanges de chaleur. surchauffes estivales et pertes hivernales réduites, gains énergétiques concrets.",
         ],
       },
       {
         title: "Laque Solaire pour skydomes et verrières",
         body: [
           "Aujourd'hui, traiter un vitrage ne se limite plus à poser un film ou ajouter une teinte, surtout sur des surfaces très exposées comme les skydomes (puits de lumière) ou certaines verrières. Avec la Laque Solaire développée par Azur Cover, ces zones critiques bénéficient d'un revêtement technique adapté.",
-          "Cette solution laisse passer environ 70 % de la lumière naturelle, tout en bloquant les apports solaires responsables de la surchauffe — limite fortement l'effet de serre sous toiture sans assombrir les espaces. Contrairement aux films souvent inadaptés ou peu durables sur ce type de supports, la laque est appliquée en couche continue.",
+          "Cette solution laisse passer environ 70 % de la lumière naturelle, tout en bloquant les apports solaires responsables de la surchauffe. limite fortement l'effet de serre sous toiture sans assombrir les espaces. Contrairement aux films souvent inadaptés ou peu durables sur ce type de supports, la laque est appliquée en couche continue.",
           "Disponible en différentes finitions, elle s'adapte parfaitement aux contraintes des skydomes et verrières, en combinant lumière, confort thermique et durabilité.",
         ],
       },

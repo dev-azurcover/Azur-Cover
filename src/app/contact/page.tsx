@@ -88,7 +88,7 @@ export default function ContactPage() {
                 <div className="relative mt-10 aspect-square w-full overflow-hidden rounded-md border border-line/60 bg-white">
                   <iframe
                     src={site.mapEmbed}
-                    title={`Carte — ${site.address.full}`}
+                    title={`Carte. ${site.address.full}`}
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                     className="absolute inset-0 h-full w-full"

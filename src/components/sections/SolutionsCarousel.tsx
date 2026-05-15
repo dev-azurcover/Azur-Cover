@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { Play, Pause } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { expertises } from "@/content/expertises";
@@ -15,7 +16,7 @@ const AUTOPLAY_MS = 8000;
 const CIRC = 113; // 2π · r=18
 
 /**
- * Orbital wheel à la Thales — 4 planets always visible, distributed around
+ * Orbital wheel à la Thales. 4 planets always visible, distributed around
  * the stage. When `active` changes, every planet shifts ONE position along
  * the orbit (counter-clockwise: 1 → 0 → 3 → 2 → 1).
  *
@@ -23,7 +24,7 @@ const CIRC = 113; // 2π · r=18
  *   x: % from the LEFT of the stage (0 = stage left edge, 100 = stage right edge)
  *   y: % from the TOP of the stage  (0 = top, 100 = bottom)
  *
- * Slot 3 (previous) is placed UPPER-LEFT of the stage — high enough that
+ * Slot 3 (previous) is placed UPPER-LEFT of the stage. high enough that
  * it sits ABOVE the text panel's vertical centre, so the two never visually
  * collide even though the text panel is just to the left of the stage.
  */
@@ -45,10 +46,10 @@ type Slot = {
 //   right → centre → upper-left → top → upper-right → right …
 // All four jumps are short, no teleport across the stage.
 const SLOTS: Record<number, Slot> = {
-  0: { x: 52, y: 55, scale: 0.85, opacity: 1.00, blur: 0,  saturate: 1.0,  brightness: 1.0,  z: 50, rotation: 0   }, // ACTIVE — centre
-  1: { x: 92, y: 30, scale: 0.42, opacity: 0.55, blur: 7,  saturate: 0.35, brightness: 0.72, z: 30, rotation: 0  }, // NEXT — upper-right
-  2: { x: 60, y: 10, scale: 0.30, opacity: 0.30, blur: 12, saturate: 0.15, brightness: 0.6,  z: 20, rotation: 0  }, // QUEUE — top
-  3: { x: 14, y: 22, scale: 0.42, opacity: 0.55, blur: 7,  saturate: 0.35, brightness: 0.72, z: 30, rotation: 0  }, // PREV — upper-left (above text)
+  0: { x: 52, y: 55, scale: 0.85, opacity: 1.00, blur: 0,  saturate: 1.0,  brightness: 1.0,  z: 50, rotation: 0   }, // ACTIVE. centre
+  1: { x: 92, y: 30, scale: 0.42, opacity: 0.55, blur: 7,  saturate: 0.35, brightness: 0.72, z: 30, rotation: 0  }, // NEXT. upper-right
+  2: { x: 60, y: 10, scale: 0.30, opacity: 0.30, blur: 12, saturate: 0.15, brightness: 0.6,  z: 20, rotation: 0  }, // QUEUE. top
+  3: { x: 14, y: 22, scale: 0.42, opacity: 0.55, blur: 7,  saturate: 0.35, brightness: 0.72, z: 30, rotation: 0  }, // PREV. upper-left (above text)
 };
 
 function slotForOffset(offset: number): Slot {
@@ -86,7 +87,7 @@ export function SolutionsCarousel() {
         const slot = slotForOffset(offset);
         el.style.zIndex = String(slot.z);
 
-        // Single tween — position, scale, opacity, rotation, filter all
+        // Single tween. position, scale, opacity, rotation, filter all
         // synced for a coherent "wheel rotation" feel. Stagger by 80ms per
         // planet index for a subtle wave.
         const stagger = immediate ? 0 : (offset * 0.08);
@@ -208,7 +209,7 @@ export function SolutionsCarousel() {
         <div aria-hidden className="pointer-events-none absolute inset-0 z-0 opacity-50 dust" />
       )}
 
-      {/* Desktop layout — 2-column grid: text 40% / planets stage 60% */}
+      {/* Desktop layout. 2-column grid: text 40% / planets stage 60% */}
       {isDesktop && (
         <div className="relative grid h-screen min-h-[820px] grid-cols-12 z-10">
           {/* Text column */}
@@ -274,7 +275,7 @@ export function SolutionsCarousel() {
                 ))}
               </div>
 
-              {/* Controls — sit BELOW the min-height text block, never overlap */}
+              {/* Controls. sit BELOW the min-height text block, never overlap */}
               <div className="mt-12 flex items-center gap-5">
                 <button
                   type="button"
@@ -305,9 +306,13 @@ export function SolutionsCarousel() {
                     type="button"
                     onClick={() => setManuallyPaused((p) => !p)}
                     aria-label={manuallyPaused ? "Reprendre l'auto-play" : "Mettre en pause"}
-                    className="absolute inset-0 flex items-center justify-center text-[10px] text-white/80 transition hover:text-white"
+                    className="absolute inset-0 flex items-center justify-center text-white/80 transition hover:text-white"
                   >
-                    {manuallyPaused ? "▶" : "❚❚"}
+                    {manuallyPaused ? (
+                      <Play className="h-3.5 w-3.5 translate-x-px fill-current" aria-hidden />
+                    ) : (
+                      <Pause className="h-3.5 w-3.5 fill-current" aria-hidden />
+                    )}
                   </button>
                 </div>
 
@@ -349,9 +354,9 @@ export function SolutionsCarousel() {
             </div>
           </div>
 
-          {/* Planets stage — right 60%, isolated from text column */}
+          {/* Planets stage. right 60%, isolated from text column */}
           <div className="col-span-7 relative">
-            {/* Orbit decoration — a full elliptical wheel, dim and dotted */}
+            {/* Orbit decoration. a full elliptical wheel, dim and dotted */}
             <svg
               aria-hidden
               viewBox="0 0 100 100"
@@ -371,7 +376,7 @@ export function SolutionsCarousel() {
               />
             </svg>
 
-            {/* Planet buttons — positioned EXCLUSIVELY by GSAP. We must NOT
+            {/* Planet buttons. positioned EXCLUSIVELY by GSAP. We must NOT
                 pass any style={{ left, top, transform, opacity }} on the JSX
                 because React would re-apply them on every render and instantly
                 teleport the planets, killing the animation. */}
@@ -387,7 +392,7 @@ export function SolutionsCarousel() {
                   "planet group absolute left-0 top-0 h-[clamp(280px,30vw,420px)] w-[clamp(280px,30vw,420px)] overflow-visible rounded-full",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azur focus-visible:ring-offset-4 focus-visible:ring-offset-[#0e0e11]"
                 )}
-                /* No inline style — GSAP owns left/top/transform/opacity */
+                /* No inline style. GSAP owns left/top/transform/opacity */
               >
                 {/* Active glow ring (rotating) */}
                 {i === active && (
@@ -429,7 +434,7 @@ export function SolutionsCarousel() {
                   />
                 </span>
 
-                {/* Active caption — under the planet, only when active */}
+                {/* Active caption. under the planet, only when active */}
                 {i === active && (
                   <span
                     aria-hidden

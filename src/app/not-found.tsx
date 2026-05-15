@@ -35,7 +35,7 @@ export default function NotFound() {
                 style={{ fontSize: "1.125rem", lineHeight: 1.55 }}
               >
                 Le lien que vous avez suivi est cassé, ou la page a été déplacée.
-                Pas grave — voilà comment retrouver votre chemin.
+                Pas grave. voilà comment retrouver votre chemin.
               </p>
 
               <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:gap-6">

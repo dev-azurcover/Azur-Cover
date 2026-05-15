@@ -23,7 +23,7 @@ export default function RealisationsIndex() {
         <PageHero
           eyebrow="Nos réalisations"
           title="Le terrain. Toujours."
-          lead="Sélection de chantiers récents qui illustrent notre savoir-faire dans la performance thermique et l'étanchéité — bâtiments tertiaires, industriels et publics."
+          lead="Sélection de chantiers récents qui illustrent notre savoir-faire dans la performance thermique et l'étanchéité. bâtiments tertiaires, industriels et publics."
         />
 
         <section className="pb-[clamp(120px,18vw,200px)]">

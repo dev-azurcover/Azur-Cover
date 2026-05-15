@@ -36,7 +36,7 @@ export function Proposition() {
             >
               L&apos;étanchéité, le cool roofing, le vernis anti-chaleur Azur
               Reflect. Trois savoir-faire complémentaires pour traiter la
-              performance thermique d&apos;un bâtiment à sa source — sans
+              performance thermique d&apos;un bâtiment à sa source. sans
               surdimensionner la climatisation.
             </p>
           </ScrollReveal>

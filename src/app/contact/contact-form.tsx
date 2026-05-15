@@ -22,7 +22,7 @@ export function ContactForm() {
     const project = String(fd.get("project") ?? "");
     const message = String(fd.get("message") ?? "");
 
-    const subject = `Demande d'audit — ${company || name || "site web"}`;
+    const subject = `Demande d'audit. ${company || name || "site web"}`;
     const body = [
       `Entreprise : ${company}`,
       `Nom : ${name}`,
@@ -44,7 +44,7 @@ export function ContactForm() {
     // Try to open the user's mail client
     const win = window.open(mailto, "_self");
     if (win === null) {
-      // Popup blocked or no handler — fallback to copy
+      // Popup blocked or no handler. fallback to copy
       void copyToClipboard(`${site.email}\n\n${subject}\n\n${body}`);
       setStatus("copied");
     } else {
@@ -107,7 +107,7 @@ export function ContactForm() {
       >
         {status === "opened" && (
           <p className="text-ink">
-            Votre client mail s&apos;ouvre avec le message pré-rempli — il ne
+            Votre client mail s&apos;ouvre avec le message pré-rempli. il ne
             reste qu&apos;à valider l&apos;envoi.
           </p>
         )}

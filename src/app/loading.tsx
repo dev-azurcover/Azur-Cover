@@ -4,7 +4,7 @@ import { Container } from "@/components/ui/Container";
 
 /**
  * Default loading skeleton applied to every route segment that doesn't define
- * its own. Sober — a thin pulsing skeleton that matches the page hero rhythm.
+ * its own. Sober. a thin pulsing skeleton that matches the page hero rhythm.
  */
 export default function Loading() {
   return (

@@ -24,18 +24,21 @@ export function Header() {
     <>
       <header
         id="top"
+        data-scrolled={scrolled}
         className={cn(
           "fixed inset-x-0 top-0 z-50 h-16",
-          "transition-[background-color,backdrop-filter,border-color,color] duration-[240ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
+          // border + backdrop-filter are ALWAYS present (transparent at top, visible
+          // when scrolled). This prevents any 1px / blur layout shift when the
+          // threshold is crossed.
+          "border-b border-transparent transition-[background-color,border-color] duration-[240ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
           scrolled
-            ? "border-b border-line/50 bg-bg/80 text-ink backdrop-blur-xl"
-            : "border-b border-transparent bg-transparent text-ink"
+            ? "border-line/50 bg-bg/85 text-ink"
+            : "bg-transparent text-ink"
         )}
-        style={
-          scrolled
-            ? { backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }
-            : undefined
-        }
+        style={{
+          backdropFilter: scrolled ? "blur(20px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
+        }}
       >
         <div className="mx-auto flex h-full max-w-[1320px] items-center justify-between px-6 sm:px-10 lg:px-20">
           <Link

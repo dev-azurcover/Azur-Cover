@@ -1,16 +1,49 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { Play, Volume2, VolumeX, Maximize } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Play, Pause, Volume2, VolumeX, Maximize } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { cn } from "@/lib/utils";
 
 export function VideoSection() {
+  const sectionRef = useRef<HTMLElement>(null);
   const ref = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
+  // Default muted = true so browsers allow autoplay on intersection.
   const [muted, setMuted] = useState(true);
   const [started, setStarted] = useState(false);
+
+  // Auto-play when the player becomes ≥50% visible. Always muted on first
+  // auto-start (browser policy). User keeps control via the buttons below.
+  useEffect(() => {
+    const v = ref.current;
+    const section = sectionRef.current;
+    if (!v || !section) return;
+
+    let triggered = false;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!triggered && e.isIntersecting && e.intersectionRatio >= 0.5) {
+            triggered = true;
+            v.muted = true;
+            setMuted(true);
+            v.play().then(() => {
+              setStarted(true);
+              setPlaying(true);
+            }).catch(() => {
+              // Autoplay blocked. user will need to click Play manually.
+            });
+            io.disconnect();
+          }
+        }
+      },
+      { threshold: [0, 0.5, 1] }
+    );
+    io.observe(section);
+    return () => io.disconnect();
+  }, []);
 
   const togglePlay = () => {
     const v = ref.current;
@@ -39,6 +72,7 @@ export function VideoSection() {
 
   return (
     <section
+      ref={sectionRef}
       id="video"
       aria-labelledby="video-h"
       className="bg-bg py-[clamp(120px,18vw,200px)]"
@@ -65,8 +99,9 @@ export function VideoSection() {
             <video
               ref={ref}
               poster="/video/azur-cover-poster.jpg"
-              preload="none"
+              preload="metadata"
               playsInline
+              muted={muted}
               onPlay={() => setPlaying(true)}
               onPause={() => setPlaying(false)}
               className="h-full w-full object-cover"
@@ -79,33 +114,39 @@ export function VideoSection() {
               <source src="/video/azur-cover-presentation.mp4" type="video/mp4" />
             </video>
 
-            {/* Big play overlay — only when not playing */}
+            {/* Big overlay : play before first start, otherwise click-to-toggle */}
             <button
               type="button"
               onClick={togglePlay}
               aria-label={playing ? "Mettre en pause" : "Lire la vidéo"}
               className={cn(
                 "absolute inset-0 flex items-center justify-center transition-opacity duration-300",
-                playing ? "pointer-events-none opacity-0" : "opacity-100"
+                started ? "opacity-0 hover:opacity-100" : "opacity-100"
               )}
             >
               <span
                 className="flex h-20 w-20 items-center justify-center rounded-full bg-white/95 text-ink shadow-2xl transition-transform duration-300 hover:scale-105 md:h-24 md:w-24"
                 style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
               >
-                <Play className="h-7 w-7 translate-x-0.5 fill-current md:h-9 md:w-9" aria-hidden />
+                {playing ? (
+                  <Pause
+                    className="h-7 w-7 fill-current md:h-9 md:w-9"
+                    aria-hidden
+                  />
+                ) : (
+                  <Play
+                    className="h-7 w-7 translate-x-0.5 fill-current md:h-9 md:w-9"
+                    aria-hidden
+                  />
+                )}
               </span>
             </button>
           </div>
 
-          {/* Controls placed BELOW the player so they never overlap the
-              logos baked into the video poster / footage. */}
-          <div
-            className={cn(
-              "mt-4 flex items-center justify-between gap-2 transition-opacity duration-300",
-              started ? "opacity-100" : "pointer-events-none opacity-0"
-            )}
-          >
+          {/* Controls below the player so they never overlap the logos baked
+              into the video poster / footage. All buttons are 40×40 with the
+              same icon size to avoid any visual jump between play/pause. */}
+          <div className="mt-4 flex items-center justify-between gap-2">
             <button
               type="button"
               onClick={togglePlay}
@@ -113,7 +154,7 @@ export function VideoSection() {
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line/60 bg-bg text-ink transition hover:bg-ink hover:text-white hover:border-ink"
             >
               {playing ? (
-                <span aria-hidden className="text-[10px]">❚❚</span>
+                <Pause className="h-4 w-4 fill-current" aria-hidden />
               ) : (
                 <Play className="h-4 w-4 translate-x-0.5 fill-current" aria-hidden />
               )}
@@ -126,7 +167,11 @@ export function VideoSection() {
                 aria-label={muted ? "Activer le son" : "Couper le son"}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line/60 bg-bg text-ink transition hover:bg-ink hover:text-white hover:border-ink"
               >
-                {muted ? <VolumeX className="h-4 w-4" aria-hidden /> : <Volume2 className="h-4 w-4" aria-hidden />}
+                {muted ? (
+                  <VolumeX className="h-4 w-4" aria-hidden />
+                ) : (
+                  <Volume2 className="h-4 w-4" aria-hidden />
+                )}
               </button>
               <button
                 type="button"

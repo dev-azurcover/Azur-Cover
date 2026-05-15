@@ -15,6 +15,8 @@ export type Realisation = {
   story: string[];
   results?: { value: string; label: string }[];
   image: { src: string; alt: string };
+  /** Path to the client logo PNG, when one exists in the client list. */
+  logo?: string;
 };
 
 // Source : pages /realisations-tertiaire/* du site azurcover.com
@@ -38,6 +40,7 @@ export const realisations: Realisation[] = [
       src: "/images/realisations/promocash.jpg",
       alt: "Toiture industrielle Promocash après application Cool Roofing",
     },
+    logo: "/images/clients/promocash.png",
   },
   {
     slug: "ecole-cannes",
@@ -79,6 +82,7 @@ export const realisations: Realisation[] = [
       src: "/images/realisations/netto.jpg",
       alt: "Toiture du magasin Netto après application Cool Roofing",
     },
+    logo: "/images/clients/netto.png",
   },
   {
     slug: "uexpress-saint-laurent",
@@ -98,6 +102,7 @@ export const realisations: Realisation[] = [
       src: "/images/realisations/netto.jpg",
       alt: "Vitrines U Express traitées au vernis Azur Reflect",
     },
+    logo: "/images/clients/u-express.png",
   },
   {
     slug: "chu-grasse",
@@ -109,12 +114,13 @@ export const realisations: Realisation[] = [
     year: "2024",
     short: "Intervention Azur Reflect au Centre Hospitalier de Grasse.",
     story: [
-      "Intervention au Centre Hospitalier de Grasse — application du vernis Azur Reflect.",
+      "Intervention au Centre Hospitalier de Grasse. application du vernis Azur Reflect.",
     ],
     image: {
       src: "/images/realisations/promocash.jpg",
       alt: "Vitrages du CHU de Grasse traités au vernis Azur Reflect",
     },
+    logo: "/images/clients/ch-grasse.png",
   },
   {
     slug: "mairie-fayence",
@@ -132,6 +138,7 @@ export const realisations: Realisation[] = [
       src: "/images/realisations/ecole-cannes.jpg",
       alt: "Toiture de la mairie de Fayence après Cool Roofing",
     },
+    logo: "/images/clients/fayence.png",
   },
   {
     slug: "marcel-fils",
@@ -147,6 +154,7 @@ export const realisations: Realisation[] = [
       src: "/images/realisations/netto.jpg",
       alt: "Vitrines Marcel & Fils traitées Azur Reflect",
     },
+    logo: "/images/clients/marcel-fils.png",
   },
   {
     slug: "satoriz-antibes",
@@ -162,6 +170,7 @@ export const realisations: Realisation[] = [
       src: "/images/realisations/netto.jpg",
       alt: "Vitrines Satoriz Antibes traitées Azur Reflect",
     },
+    logo: "/images/clients/satoriz.png",
   },
   {
     slug: "intermarche-nice",
@@ -177,6 +186,7 @@ export const realisations: Realisation[] = [
       src: "/images/realisations/netto.jpg",
       alt: "Vitrines Intermarché Nice traitées Azur Reflect",
     },
+    logo: "/images/clients/intermarche.png",
   },
   {
     slug: "vitrolles",
@@ -210,6 +220,7 @@ export const realisations: Realisation[] = [
       src: "/images/realisations/promocash.jpg",
       alt: "Toiture bac acier du Laboratoire Braja Vesigné",
     },
+    logo: "/images/clients/groupe-braja.png",
   },
   {
     slug: "ehpad-petit-paris",

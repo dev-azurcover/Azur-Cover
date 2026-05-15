@@ -21,7 +21,7 @@ export const about = {
       title: "Les solutions classiques ne suffisent pas",
       paragraphs: [
         "Face à cette réalité, une évidence s'est imposée : peindre ne suffit pas. Isoler ne suffit pas. Remplacer ne suffit pas.",
-        "Il fallait aller plus loin. Repenser le rôle même des surfaces. Façades, toitures, vitrages — non plus comme des éléments passifs, mais comme des zones actives capables de réguler, protéger et performer.",
+        "Il fallait aller plus loin. Repenser le rôle même des surfaces. Façades, toitures, vitrages. non plus comme des éléments passifs, mais comme des zones actives capables de réguler, protéger et performer.",
         "C'est cette vision qui guide aujourd'hui chaque solution développée par Azur Cover.",
       ],
     },
@@ -61,7 +61,7 @@ export const about = {
       number: "03",
       title: "Innovation",
       description:
-        "Aérogels de silice, traitements solaires, nanotechnologie — pour des résultats mesurables.",
+        "Aérogels de silice, traitements solaires, nanotechnologie. pour des résultats mesurables.",
     },
   ],
 } as const;

@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 export const contentType = "image/png";
 export const size = { width: 1200, height: 630 };
 export const alt =
-  "Azur Cover — Expert national en étanchéité et performance thermique";
+  "Azur Cover. Expert national en étanchéité et performance thermique";
 
 // Fetch Inter from Google Fonts at build time (Satori needs TTF/OTF/WOFF, not WOFF2).
 // This network call only happens at build/deploy, never at user runtime.

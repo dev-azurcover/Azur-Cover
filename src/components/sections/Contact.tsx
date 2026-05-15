@@ -14,7 +14,7 @@ export function Contact() {
     >
       <Container>
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-20">
-          {/* Left — copy & infos */}
+          {/* Left. copy & infos */}
           <div>
             <ScrollReveal>
               <Eyebrow>Parlons de votre projet</Eyebrow>
@@ -107,12 +107,12 @@ export function Contact() {
             </ScrollReveal>
           </div>
 
-          {/* Right — Map */}
+          {/* Right. Map */}
           <ScrollReveal delay={120}>
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md border border-line/60 bg-white lg:aspect-square">
               <iframe
                 src={site.mapEmbed}
-                title={`Carte — ${site.address.full}`}
+                title={`Carte. ${site.address.full}`}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="absolute inset-0 h-full w-full"

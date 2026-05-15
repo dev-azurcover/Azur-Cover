@@ -39,8 +39,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
     default:
-      "Azur Cover — Expert national en étanchéité et performance thermique",
-    template: "%s — Azur Cover",
+      "Azur Cover. Expert national en étanchéité et performance thermique",
+    template: "%s. Azur Cover",
   },
   description: site.description,
   keywords: [
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     url: site.url,
     siteName: site.name,
     title:
-      "Azur Cover — Expert national en étanchéité et performance thermique",
+      "Azur Cover. Expert national en étanchéité et performance thermique",
     description: site.description,
   },
   twitter: {
@@ -142,7 +142,7 @@ export default function RootLayout({
           Aller au contenu principal
         </a>
         {children}
-        {/* Static JSON-LD graph — rendered inline so crawlers see it on first byte */}
+        {/* Static JSON-LD graph. rendered inline so crawlers see it on first byte */}
         <script type="application/ld+json">{jsonLd}</script>
       </body>
     </html>

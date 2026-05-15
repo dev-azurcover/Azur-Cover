@@ -25,7 +25,7 @@ export default function FAQPage() {
         <PageHero
           eyebrow="FAQ"
           title="Toutes vos questions, des réponses claires."
-          lead="Cool Roofing, Azur Reflect, étanchéité, méthode, certifications — voici les réponses aux questions que nous recevons le plus souvent."
+          lead="Cool Roofing, Azur Reflect, étanchéité, méthode, certifications. voici les réponses aux questions que nous recevons le plus souvent."
         />
 
         <section className="pb-[clamp(120px,18vw,200px)]">

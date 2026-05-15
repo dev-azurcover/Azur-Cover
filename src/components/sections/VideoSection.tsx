@@ -114,33 +114,14 @@ export function VideoSection() {
               <source src="/video/azur-cover-presentation.mp4" type="video/mp4" />
             </video>
 
-            {/* Big overlay : play before first start, otherwise click-to-toggle */}
+            {/* Click anywhere on the player to toggle play/pause — no big
+                overlay button, controls are only in the row below. */}
             <button
               type="button"
               onClick={togglePlay}
               aria-label={playing ? "Mettre en pause" : "Lire la vidéo"}
-              className={cn(
-                "absolute inset-0 flex items-center justify-center transition-opacity duration-300",
-                started ? "opacity-0 hover:opacity-100" : "opacity-100"
-              )}
-            >
-              <span
-                className="flex h-20 w-20 items-center justify-center rounded-full bg-white/95 text-ink shadow-2xl transition-transform duration-300 hover:scale-105 md:h-24 md:w-24"
-                style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
-              >
-                {playing ? (
-                  <Pause
-                    className="h-7 w-7 fill-current md:h-9 md:w-9"
-                    aria-hidden
-                  />
-                ) : (
-                  <Play
-                    className="h-7 w-7 translate-x-0.5 fill-current md:h-9 md:w-9"
-                    aria-hidden
-                  />
-                )}
-              </span>
-            </button>
+              className="absolute inset-0 cursor-pointer"
+            />
           </div>
 
           {/* Controls below the player so they never overlap the logos baked

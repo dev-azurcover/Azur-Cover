@@ -181,12 +181,6 @@ export function Footer() {
 
         <div className="mt-16 flex flex-col gap-3 border-t border-white/10 pt-6 font-mono text-[11px] uppercase tracking-[0.15em] text-white/40 md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} Azur Cover. Tous droits réservés.</p>
-          <div className="flex flex-wrap gap-x-5 gap-y-1">
-            <Link href="/mentions-legales" className="hover:text-white/70">Mentions légales</Link>
-            <Link href="/cgv" className="hover:text-white/70">CGV</Link>
-            <Link href="/confidentialite" className="hover:text-white/70">Confidentialité</Link>
-            <Link href="/cookies" className="hover:text-white/70">Cookies</Link>
-          </div>
         </div>
 
         <p className="mt-8 text-center font-mono text-[10px] uppercase tracking-[0.18em] text-white/25">

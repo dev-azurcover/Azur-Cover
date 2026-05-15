@@ -301,17 +301,7 @@ export function SolutionsCarousel() {
                   →
                 </button>
 
-                {paused && (
-                  <span
-                    aria-live="polite"
-                    className="ml-2 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-azur"
-                  >
-                    <span className="h-1.5 w-1.5 rounded-full bg-azur" />
-                    En pause
-                  </span>
-                )}
-
-                <span className="ml-auto font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
+                <span className="ml-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
                   {String(active + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
                 </span>
               </div>

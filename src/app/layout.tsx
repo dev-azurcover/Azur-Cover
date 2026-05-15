@@ -97,7 +97,7 @@ const jsonLdGraph = {
         addressCountry: "FR",
       },
       areaServed: { "@type": "Country", name: "France" },
-      sameAs: [site.social.linkedin, site.social.instagram, site.social.tiktok].filter(Boolean),
+      sameAs: [site.social.linkedin, site.social.instagram, site.social.facebook].filter(Boolean),
     },
     {
       "@type": "Organization",
@@ -105,7 +105,7 @@ const jsonLdGraph = {
       name: site.name,
       url: site.url,
       logo: `${site.url}/images/brand/logo.png`,
-      sameAs: [site.social.linkedin, site.social.instagram, site.social.tiktok].filter(Boolean),
+      sameAs: [site.social.linkedin, site.social.instagram, site.social.facebook].filter(Boolean),
     },
     {
       "@type": "WebSite",

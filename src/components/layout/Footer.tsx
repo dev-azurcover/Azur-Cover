@@ -31,10 +31,10 @@ function InstagramIcon({ className }: { className?: string }) {
   );
 }
 
-function TiktokIcon({ className }: { className?: string }) {
+function FacebookIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
-      <path d="M19.32 6.39a5.42 5.42 0 0 1-3.18-1.02V15.5a5.5 5.5 0 1 1-5.5-5.5c.31 0 .61.03.9.08v2.84a2.66 2.66 0 1 0 1.85 2.58V2h2.75a5.42 5.42 0 0 0 3.18 4.39v.0z" />
+      <path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.69.24 2.69.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z" />
     </svg>
   );
 }
@@ -59,8 +59,7 @@ export function Footer() {
             <p className="mt-5 max-w-[260px] text-sm leading-relaxed text-white/55">
               Expert national en performance thermique et étanchéité.
             </p>
-            {/* Social icons rendered only when URLs are provided in site.social */}
-            {(site.social.instagram || site.social.linkedin || site.social.tiktok) && (
+            {(site.social.instagram || site.social.facebook || site.social.linkedin) && (
               <div className="mt-6 flex gap-3">
                 {site.social.instagram && (
                   <a
@@ -73,6 +72,17 @@ export function Footer() {
                     <InstagramIcon className="h-4 w-4" />
                   </a>
                 )}
+                {site.social.facebook && (
+                  <a
+                    href={site.social.facebook}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label="Facebook"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/15 text-white/70 transition hover:border-white/40 hover:text-white"
+                  >
+                    <FacebookIcon className="h-4 w-4" />
+                  </a>
+                )}
                 {site.social.linkedin && (
                   <a
                     href={site.social.linkedin}
@@ -82,17 +92,6 @@ export function Footer() {
                     className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/15 text-white/70 transition hover:border-white/40 hover:text-white"
                   >
                     <LinkedinIcon className="h-4 w-4" />
-                  </a>
-                )}
-                {site.social.tiktok && (
-                  <a
-                    href={site.social.tiktok}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    aria-label="TikTok"
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/15 text-white/70 transition hover:border-white/40 hover:text-white"
-                  >
-                    <TiktokIcon className="h-4 w-4" />
                   </a>
                 )}
               </div>
@@ -183,6 +182,10 @@ export function Footer() {
 
         <div className="mt-16 flex flex-col gap-3 border-t border-white/10 pt-6 font-mono text-[11px] uppercase tracking-[0.15em] text-white/40 md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} Azur Cover. Tous droits réservés.</p>
+          <div className="flex flex-wrap gap-x-5 gap-y-1">
+            <Link href="/mentions-legales" className="hover:text-white/70">Mentions légales</Link>
+            <Link href="/confidentialite" className="hover:text-white/70">Confidentialité</Link>
+          </div>
         </div>
 
         <p className="mt-8 text-center font-mono text-[10px] uppercase tracking-[0.18em] text-white/25">

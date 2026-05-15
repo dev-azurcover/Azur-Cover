@@ -6,59 +6,56 @@ import { Button } from "@/components/ui/Button";
 import { site } from "@/content/site";
 import { cn } from "@/lib/utils";
 
-type Status = "idle" | "opened" | "copied" | "error";
+type Status = "idle" | "sending" | "sent" | "error";
 
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (status === "sending") return;
+    setStatus("sending");
+    setErrorMsg("");
+
     const fd = new FormData(e.currentTarget);
-    const company = String(fd.get("company") ?? "");
-    const name = String(fd.get("name") ?? "");
-    const email = String(fd.get("email") ?? "");
-    const phone = String(fd.get("phone") ?? "");
-    const city = String(fd.get("city") ?? "");
-    const project = String(fd.get("project") ?? "");
-    const message = String(fd.get("message") ?? "");
+    const payload = {
+      company: String(fd.get("company") ?? ""),
+      name: String(fd.get("name") ?? ""),
+      email: String(fd.get("email") ?? ""),
+      phone: String(fd.get("phone") ?? ""),
+      city: String(fd.get("city") ?? ""),
+      project: String(fd.get("project") ?? ""),
+      message: String(fd.get("message") ?? ""),
+      website: String(fd.get("website") ?? ""), // honeypot
+    };
 
-    const subject = `Demande d'audit. ${company || name || "site web"}`;
-    const body = [
-      `Entreprise : ${company}`,
-      `Nom : ${name}`,
-      `Email : ${email}`,
-      phone && `Téléphone : ${phone}`,
-      city && `Ville du bâtiment : ${city}`,
-      project && `Type de projet : ${project}`,
-      "",
-      "Message :",
-      message,
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    const mailto = `mailto:${site.email}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-
-    // Try to open the user's mail client
-    const win = window.open(mailto, "_self");
-    if (win === null) {
-      // Popup blocked or no handler. fallback to copy
-      void copyToClipboard(`${site.email}\n\n${subject}\n\n${body}`);
-      setStatus("copied");
-    } else {
-      setStatus("opened");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStatus("error");
+        setErrorMsg(
+          (typeof data?.error === "string" && data.error) ||
+            "Échec de l'envoi. Réessayez ou écrivez-nous directement."
+        );
+        return;
+      }
+      setStatus("sent");
+      // Reset the form after success
+      (e.target as HTMLFormElement).reset();
+    } catch {
+      setStatus("error");
+      setErrorMsg("Erreur réseau. Vérifiez votre connexion et réessayez.");
     }
   };
 
-  const copyEmailOnly = async () => {
-    const ok = await copyToClipboard(site.email);
-    setStatus(ok ? "copied" : "error");
-  };
-
   return (
-    <form onSubmit={handleSubmit} className="lg:col-span-7">
+    <form onSubmit={handleSubmit} className="lg:col-span-7" noValidate>
       <Eyebrow>Demande d&apos;audit</Eyebrow>
 
       <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -84,17 +81,25 @@ export function ContactForm() {
           name="message"
           placeholder="Surface approximative, contraintes, planning souhaité…"
         />
+
+        {/* Honeypot — hidden field, real users never fill it. Bots do. */}
+        <label
+          aria-hidden
+          className="absolute left-[-9999px] h-0 w-0 overflow-hidden"
+          tabIndex={-1}
+        >
+          Site web
+          <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+        </label>
       </div>
 
       <div className="mt-10 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-6">
-        <Button arrow>Envoyer ma demande</Button>
-        <button
-          type="button"
-          onClick={copyEmailOnly}
-          className="text-sm text-muted underline-grow hover:text-ink"
-        >
-          Ou copier l&apos;email
-        </button>
+        <Button arrow>
+          {status === "sending" ? "Envoi…" : "Envoyer ma demande"}
+        </Button>
+        <p className="text-xs text-muted">
+          Vous serez contacté sous 48 h.
+        </p>
       </div>
 
       <div
@@ -102,30 +107,19 @@ export function ContactForm() {
         aria-live="polite"
         className={cn(
           "mt-6 text-sm transition-opacity duration-300",
-          status === "idle" ? "opacity-0" : "opacity-100"
+          status === "idle" || status === "sending"
+            ? "opacity-0"
+            : "opacity-100"
         )}
       >
-        {status === "opened" && (
+        {status === "sent" && (
           <p className="text-ink">
-            Votre client mail s&apos;ouvre avec le message pré-rempli. il ne
-            reste qu&apos;à valider l&apos;envoi.
-          </p>
-        )}
-        {status === "copied" && (
-          <p className="text-ink">
-            Email copié dans le presse-papier. Vous pouvez nous écrire à{" "}
-            <a
-              href={`mailto:${site.email}`}
-              className="font-medium text-azur-deep hover:underline"
-            >
-              {site.email}
-            </a>
-            .
+            Demande reçue. Nous revenons vers vous sous 48 h.
           </p>
         )}
         {status === "error" && (
           <p className="text-ink">
-            Impossible de copier l&apos;email automatiquement. Notre adresse :{" "}
+            {errorMsg} Vous pouvez aussi nous écrire à{" "}
             <a
               href={`mailto:${site.email}`}
               className="font-medium text-azur-deep hover:underline"
@@ -138,30 +132,6 @@ export function ContactForm() {
       </div>
     </form>
   );
-}
-
-async function copyToClipboard(text: string): Promise<boolean> {
-  try {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(text);
-      return true;
-    }
-  } catch {
-    // fall through to legacy attempt
-  }
-  try {
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.position = "fixed";
-    ta.style.left = "-9999px";
-    document.body.appendChild(ta);
-    ta.select();
-    const ok = document.execCommand("copy");
-    document.body.removeChild(ta);
-    return ok;
-  } catch {
-    return false;
-  }
 }
 
 type FieldProps = {

@@ -17,11 +17,10 @@ export const site = {
     country: "France",
     full: "Space Antipolis, 2323 Chemin de Saint-Bernard, 06220 Vallauris",
   },
-  // Réseaux sociaux : à fournir par le client. Liens placeholders en attendant.
   social: {
-    linkedin: "",
-    instagram: "",
-    tiktok: "",
+    instagram: "https://www.instagram.com/azurcover/",
+    facebook: "https://www.facebook.com/people/Azur-Cover/61565050301029/",
+    linkedin: "https://www.linkedin.com/company/azur-cover/",
   },
   mapEmbed:
     "https://www.google.com/maps?q=Space%20Antipolis%2C%202323%20Chemin%20de%20Saint-Bernard%2C%2006220%20Vallauris&output=embed",

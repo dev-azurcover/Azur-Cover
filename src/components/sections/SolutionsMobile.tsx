@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, A11y } from "swiper/modules";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { solutions } from "@/content/solutions";
+import { expertises } from "@/content/expertises";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -23,19 +24,18 @@ export function SolutionsMobile() {
           lineHeight: 1,
         }}
       >
-        Quatre expertises, un seul interlocuteur.
+        Quatre savoir-faire. Une seule promesse.
       </h2>
 
       <Swiper
         modules={[Pagination, A11y]}
         spaceBetween={20}
         slidesPerView={1.05}
-        centeredSlides={false}
         pagination={{ clickable: true }}
         className="mt-10 [&_.swiper-pagination-bullet]:!bg-white/30 [&_.swiper-pagination-bullet-active]:!bg-azur"
       >
-        {solutions.map((s) => (
-          <SwiperSlide key={s.id}>
+        {expertises.map((s) => (
+          <SwiperSlide key={s.slug}>
             <article className="flex flex-col">
               <div className="relative aspect-[4/5] w-full overflow-hidden rounded-md bg-graphite-warm">
                 <Image
@@ -46,7 +46,7 @@ export function SolutionsMobile() {
                   className="object-cover photo-treatment"
                 />
                 <span className="absolute left-3 top-3 inline-block rounded-md bg-bg/95 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink">
-                  {s.index} · {s.title.replace(/\.$/, "")}
+                  {s.index} · {s.title}
                 </span>
               </div>
               <div className="pb-12 pt-6">
@@ -59,25 +59,15 @@ export function SolutionsMobile() {
                     lineHeight: 1.05,
                   }}
                 >
-                  {s.title}
+                  {s.title}.
                 </h3>
-                <p className="mt-4 text-sm leading-relaxed text-white/70">
-                  {s.body}
-                </p>
-                <ul className="mt-5 space-y-2">
-                  {s.bullets.map((b) => (
-                    <li
-                      key={b}
-                      className="flex items-start gap-3 text-sm text-white/85"
-                    >
-                      <span
-                        aria-hidden
-                        className="mt-2 inline-block h-px w-4 shrink-0 bg-azur"
-                      />
-                      {b}
-                    </li>
-                  ))}
-                </ul>
+                <p className="mt-4 text-sm leading-relaxed text-white/70">{s.short}</p>
+                <Link
+                  href={`/expertises/${s.slug}`}
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-white underline-grow"
+                >
+                  Lire l&apos;expertise <span aria-hidden>→</span>
+                </Link>
               </div>
             </article>
           </SwiperSlide>

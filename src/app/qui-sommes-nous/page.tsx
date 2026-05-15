@@ -1,0 +1,128 @@
+import type { Metadata } from "next";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { PageHero } from "@/components/sections/PageHero";
+import { Container } from "@/components/ui/Container";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { Button } from "@/components/ui/Button";
+import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { about } from "@/content/about";
+
+export const metadata: Metadata = {
+  title: about.meta.title,
+  description: about.meta.description,
+};
+
+export default function AboutPage() {
+  return (
+    <>
+      <Header />
+      <main id="main">
+        <PageHero
+          eyebrow={about.eyebrow}
+          title={about.title}
+          lead={about.intro}
+        />
+
+        {/* Long-form story blocks */}
+        <section data-bg="3" className="py-[clamp(120px,18vw,200px)]">
+          <Container size="narrow">
+            <div className="space-y-20 md:space-y-28">
+              {about.blocks.map((block, i) => (
+                <ScrollReveal key={block.title} delay={i * 60}>
+                  <h2
+                    className="text-ink"
+                    style={{
+                      fontSize: "clamp(1.75rem, 3vw, 2.5rem)",
+                      fontWeight: 600,
+                      letterSpacing: "-0.025em",
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    {block.title}
+                  </h2>
+                  <div
+                    className="mt-6 space-y-5 text-ink"
+                    style={{ fontSize: "1.0625rem", lineHeight: 1.7 }}
+                  >
+                    {block.paragraphs.map((p, j) => (
+                      <p key={j}>{p}</p>
+                    ))}
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
+          </Container>
+        </section>
+
+        {/* Pillars */}
+        <section data-bg="4" className="border-y border-line/60 py-[clamp(120px,18vw,200px)]">
+          <Container>
+            <Eyebrow>Trois piliers</Eyebrow>
+            <h2
+              className="mt-6 max-w-[640px] text-ink"
+              style={{
+                fontSize: "clamp(2rem, 4vw, 3.5rem)",
+                fontWeight: 600,
+                letterSpacing: "-0.03em",
+                lineHeight: 1.05,
+              }}
+            >
+              Une approche construite à chaque étape.
+            </h2>
+
+            <ol className="mt-16 grid grid-cols-1 gap-x-6 gap-y-12 md:grid-cols-3">
+              {about.pillars.map((p, i) => (
+                <ScrollReveal as="li" key={p.number} delay={120 + i * 100}>
+                  <span
+                    className="block text-azur"
+                    style={{
+                      fontSize: "clamp(4rem, 7vw, 6rem)",
+                      fontWeight: 200,
+                      letterSpacing: "-0.04em",
+                      lineHeight: 0.9,
+                    }}
+                  >
+                    {p.number}
+                  </span>
+                  <h3
+                    className="mt-4 text-ink"
+                    style={{ fontSize: "1.5rem", fontWeight: 600, letterSpacing: "-0.02em" }}
+                  >
+                    {p.title}
+                  </h3>
+                  <p className="mt-3 max-w-xs text-muted" style={{ lineHeight: 1.6 }}>
+                    {p.description}
+                  </p>
+                </ScrollReveal>
+              ))}
+            </ol>
+          </Container>
+        </section>
+
+        {/* CTA */}
+        <section data-bg="4" className="py-20">
+          <Container>
+            <div className="flex flex-col items-start gap-6">
+              <h2
+                className="max-w-[640px] text-ink"
+                style={{
+                  fontSize: "clamp(1.75rem, 3vw, 2.5rem)",
+                  fontWeight: 600,
+                  letterSpacing: "-0.025em",
+                  lineHeight: 1.1,
+                }}
+              >
+                Travaillons ensemble.
+              </h2>
+              <Button href="/contact" arrow>
+                Demander un audit
+              </Button>
+            </div>
+          </Container>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}

@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { solutions } from "@/content/solutions";
+import { expertises } from "@/content/expertises";
 import { cn } from "@/lib/utils";
 import { SolutionsMobile } from "./SolutionsMobile";
 
@@ -14,42 +15,38 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(MotionPathPlugin);
 }
 
-const N = solutions.length;
+const N = expertises.length;
 const AUTOPLAY_MS = 7000;
+const CIRC = 113; // 2π · r=18
 
-/** A planet's "slot" along the smile path: 0 = leftmost, 1 = rightmost.
- * Active is in the middle. The spread is symmetric. */
-function slotForOffset(offset: number) {
-  // offset = (i - active + N) % N, mapped to 0..N-1
-  // We center "0" at 0.5 on the path, and place others at fixed slots around it.
-  // For 4 planets: [0.5 (active), 0.85 (right), 0.15 (left), 0.0 or 1.0 (back)]
+/** For 4 items, the slot positions on the path (0 = leftmost, 1 = rightmost) */
+function slotForOffset(offset: number): number {
   switch (offset) {
     case 0:
-      return 0.5; // active, centre
+      return 0.5; // active — centre
     case 1:
-      return 0.84; // immediate right
+      return 0.78; // immediate right
     case 2:
-      return 0.05; // far left (or "behind" feel)
+      return 0.92; // far right (or off)
     case 3:
-      return 0.16; // immediate left
+      return 0.22; // immediate left
     default:
       return 0.5;
   }
 }
 
 function visualForOffset(offset: number) {
-  // Scale and blur values per slot.
   switch (offset) {
     case 0:
-      return { scale: 1.0, blur: 0, z: 5, opacity: 1 };
+      return { scale: 1.0, blur: 0, z: 50, opacity: 1 };
     case 1:
-      return { scale: 0.65, blur: 8, z: 3, opacity: 0.85 };
+      return { scale: 0.55, blur: 6, z: 30, opacity: 0.65 };
     case 2:
-      return { scale: 0.5, blur: 18, z: 1, opacity: 0.55 };
+      return { scale: 0.4, blur: 14, z: 10, opacity: 0.4 };
     case 3:
-      return { scale: 0.65, blur: 8, z: 3, opacity: 0.85 };
+      return { scale: 0.55, blur: 6, z: 30, opacity: 0.65 };
     default:
-      return { scale: 1, blur: 0, z: 5, opacity: 1 };
+      return { scale: 1, blur: 0, z: 50, opacity: 1 };
   }
 }
 
@@ -57,28 +54,53 @@ export function SolutionsCarousel() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const planetRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const dotRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const labelRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const pathRef = useRef<SVGPathElement>(null);
   const progressRef = useRef<SVGCircleElement>(null);
-  const tabBarRef = useRef<HTMLDivElement>(null);
 
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
 
-  // Detect viewport on mount + resize
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
+    const mq = window.matchMedia("(min-width: 1024px)");
     const update = () => setIsDesktop(mq.matches);
     update();
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  /** Place all planets on the path according to current `active`. */
-  const layoutPlanets = useCallback(
+  /** Place planets, dots and labels along the path. */
+  const layout = useCallback(
     (immediate = false) => {
       const path = pathRef.current;
       if (!path) return;
+
+      // Position the small dots and labels at fixed slot positions for ALL items
+      expertises.forEach((_, i) => {
+        const dot = dotRefs.current[i];
+        const label = labelRefs.current[i];
+        const offset = (i - active + N) % N;
+        const slot = slotForOffset(offset);
+        if (dot) {
+          gsap.to(dot, {
+            motionPath: { path, align: path, alignOrigin: [0.5, 0.5], start: slot, end: slot },
+            duration: immediate ? 0 : 0.85,
+            ease: "expo.out",
+            overwrite: "auto",
+          });
+        }
+        if (label) {
+          gsap.to(label, {
+            motionPath: { path, align: path, alignOrigin: [0.5, 0], start: slot, end: slot },
+            duration: immediate ? 0 : 0.85,
+            ease: "expo.out",
+            overwrite: "auto",
+          });
+        }
+      });
+
       planetRefs.current.forEach((el, i) => {
         if (!el) return;
         const offset = (i - active + N) % N;
@@ -90,19 +112,15 @@ export function SolutionsCarousel() {
           motionPath: { path, align: path, alignOrigin: [0.5, 0.5], start: t, end: t },
           scale,
           opacity,
-          duration: immediate ? 0 : 0.85,
+          duration: immediate ? 0 : 0.95,
           ease: "expo.out",
           overwrite: "auto",
-          onStart: () => {
-            el.style.willChange = "transform, opacity, filter";
-          },
-          onComplete: () => {
-            el.style.willChange = "auto";
-          },
+          onStart: () => { el.style.willChange = "transform, opacity, filter"; },
+          onComplete: () => { el.style.willChange = "auto"; },
         });
         gsap.to(el, {
           filter: `blur(${blur}px)`,
-          duration: immediate ? 0 : 0.6,
+          duration: immediate ? 0 : 0.7,
           ease: "expo.out",
           overwrite: "auto",
         });
@@ -111,18 +129,21 @@ export function SolutionsCarousel() {
     [active]
   );
 
-  // Re-layout whenever active or viewport state changes
   useEffect(() => {
     if (!isDesktop) return;
-    layoutPlanets();
-  }, [layoutPlanets, isDesktop]);
+    layout();
+  }, [layout, isDesktop]);
 
-  // Initial placement after fonts/svg ready
   useEffect(() => {
     if (!isDesktop) return;
-    const id = window.requestAnimationFrame(() => layoutPlanets(true));
-    return () => window.cancelAnimationFrame(id);
-  }, [isDesktop, layoutPlanets]);
+    const id = window.requestAnimationFrame(() => layout(true));
+    const onResize = () => layout(true);
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.cancelAnimationFrame(id);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [isDesktop, layout]);
 
   // Autoplay + circular progress
   useEffect(() => {
@@ -130,56 +151,36 @@ export function SolutionsCarousel() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const circle = progressRef.current;
-    const tabBar = tabBarRef.current;
-    const CIRC = 113; // 2π * r=18
-
     if (circle) {
-      gsap.set(circle, { strokeDasharray: CIRC, strokeDashoffset: CIRC });
+      gsap.set(circle, { strokeDashoffset: CIRC });
       gsap.to(circle, {
         strokeDashoffset: 0,
         duration: AUTOPLAY_MS / 1000,
         ease: "none",
       });
     }
-    if (tabBar) {
-      const fill = tabBar.querySelector<HTMLSpanElement>(`[data-tabfill="${active}"]`);
-      if (fill) {
-        gsap.fromTo(
-          fill,
-          { scaleX: 0 },
-          { scaleX: 1, duration: AUTOPLAY_MS / 1000, ease: "none" }
-        );
-      }
-    }
-
     const t = window.setTimeout(() => {
       setActive((i) => (i + 1) % N);
     }, AUTOPLAY_MS);
     return () => window.clearTimeout(t);
   }, [active, paused, isDesktop]);
 
-  // Crossfade text panel
   const goTo = useCallback((i: number) => {
     setActive(((i % N) + N) % N);
   }, []);
 
-  // Keyboard navigation when section has focus
+  // Keyboard
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (!sectionRef.current?.contains(document.activeElement)) return;
-      if (e.key === "ArrowRight") {
-        e.preventDefault();
-        goTo(active + 1);
-      } else if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        goTo(active - 1);
-      }
+      if (e.key === "ArrowRight") { e.preventDefault(); goTo(active + 1); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); goTo(active - 1); }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [active, goTo]);
 
-  const current = solutions[active];
+  const current = expertises[active];
 
   return (
     <section
@@ -191,234 +192,227 @@ export function SolutionsCarousel() {
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
-      className="relative isolate text-white py-[clamp(120px,18vw,200px)]"
+      className="relative isolate overflow-hidden text-white py-[clamp(120px,18vw,200px)]"
       style={{
-        background: "radial-gradient(ellipse at top, #2a2a2d 0%, #1d1d1f 60%)",
+        background: "radial-gradient(ellipse 80% 60% at 50% 0%, #2a2a2d 0%, #1d1d1f 60%)",
       }}
     >
-      <Container className="hidden md:block">
+      <Container className="hidden lg:block">
+        {/* Header row: text left, controls right */}
         <div className="grid grid-cols-12 gap-12">
-          {/* Left content */}
-          <div
-            role="tabpanel"
-            id={`panel-${current.id}`}
-            aria-labelledby={`tab-${current.id}`}
-            className="col-span-12 lg:col-span-5"
-          >
+          <div className="col-span-7" role="tabpanel" id={`panel-${current.slug}`} aria-labelledby={`tab-${current.slug}`}>
             <Eyebrow tone="white" id="solutions-h">
               Nos solutions
             </Eyebrow>
 
-            {/* Crossfade key on the active id ensures the slot animates on change */}
-            <div key={current.id} className="mt-8 motion-fade-in">
+            {/* Crossfade key */}
+            <div key={current.slug} className="mt-8 motion-fade-in">
               <h2
                 className="text-white"
                 style={{
-                  fontSize: "clamp(2.5rem, 4.5vw, 4.5rem)",
+                  fontSize: "clamp(3rem, 5.5vw, 6rem)",
                   fontWeight: 600,
-                  letterSpacing: "-0.03em",
-                  lineHeight: 1,
+                  letterSpacing: "-0.04em",
+                  lineHeight: 0.95,
                 }}
-                data-slot="title"
               >
-                {current.title}
+                {current.title}.
               </h2>
               <p
-                className="mt-6 max-w-[440px] text-white/70"
+                className="mt-7 max-w-[520px] text-white/70"
                 style={{ fontSize: "1.0625rem", lineHeight: 1.6 }}
-                data-slot="description"
               >
-                {current.body}
+                {current.short}
               </p>
-              <ul className="mt-7 space-y-2.5" data-slot="bullets">
-                {current.bullets.map((b) => (
-                  <li
-                    key={b}
-                    className="flex items-start gap-3 text-sm text-white/80"
-                  >
-                    <span
-                      aria-hidden
-                      className="mt-2 inline-block h-px w-4 shrink-0 bg-azur"
-                    />
+              <ul className="mt-6 space-y-2.5">
+                {current.bullets.slice(0, 4).map((b) => (
+                  <li key={b} className="flex items-start gap-3 text-sm text-white/80">
+                    <span aria-hidden className="mt-2 inline-block h-px w-4 shrink-0 bg-azur" />
                     {b}
                   </li>
                 ))}
               </ul>
 
-              <a
-                href="#contact"
+              <Link
+                href={`/expertises/${current.slug}`}
                 data-cursor="hover"
-                data-slot="link"
                 className="underline-grow mt-9 inline-flex items-center gap-2 text-sm font-medium text-white"
               >
-                En savoir plus
+                {current.cta}
                 <span aria-hidden>→</span>
-              </a>
-            </div>
-
-            {/* Controls + progress */}
-            <div className="mt-12 flex items-center gap-5">
-              <button
-                type="button"
-                onClick={() => goTo(active - 1)}
-                aria-label="Solution précédente"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition hover:border-white/60"
-              >
-                ←
-              </button>
-
-              <svg
-                viewBox="0 0 40 40"
-                className="h-10 w-10 -rotate-90"
-                aria-hidden
-              >
-                <circle cx="20" cy="20" r="18" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" fill="none" />
-                <circle
-                  ref={progressRef}
-                  cx="20"
-                  cy="20"
-                  r="18"
-                  stroke="var(--color-azur)"
-                  strokeWidth="1.5"
-                  fill="none"
-                  strokeLinecap="round"
-                  style={{ strokeDasharray: 113, strokeDashoffset: 113 }}
-                />
-              </svg>
-
-              <button
-                type="button"
-                onClick={() => goTo(active + 1)}
-                aria-label="Solution suivante"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition hover:border-white/60"
-              >
-                →
-              </button>
-
-              <span className="ml-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
-                {String(active + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
-              </span>
+              </Link>
             </div>
           </div>
 
-          {/* Right stage with orbit */}
-          <div
-            ref={stageRef}
-            className="col-span-12 relative h-[520px] lg:col-span-7 lg:h-[600px]"
-          >
-            {/* SVG orbit */}
-            <svg
-              viewBox="0 0 800 600"
-              preserveAspectRatio="none"
-              className="absolute inset-0 h-full w-full"
-            >
-              <path
-                ref={pathRef}
-                id="orbit-path"
-                d="M80,200 Q400,420 720,200"
-                fill="none"
-                stroke="rgba(255,255,255,0.08)"
-                strokeWidth="1"
-                strokeDasharray="3 8"
-              />
-            </svg>
-
-            {/* Planets */}
-            {solutions.map((s, i) => (
-              <button
-                type="button"
-                key={s.id}
-                ref={(el) => {
-                  planetRefs.current[i] = el;
-                }}
-                onClick={() => goTo(i)}
-                aria-label={`Voir ${s.title.replace(/\.$/, "")}`}
-                data-cursor="hover"
-                className={cn(
-                  "absolute left-0 top-0 h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-full overflow-hidden",
-                  "border-2 transition-colors duration-500",
-                  i === active ? "border-azur" : "border-white/10"
-                )}
-                style={{ transformOrigin: "center" }}
-              >
-                <Image
-                  src={s.image.src}
-                  alt={s.image.alt}
-                  fill
-                  sizes="280px"
-                  className="object-cover photo-treatment"
-                />
-                {/* Active label band */}
-                <span
-                  aria-hidden
-                  className={cn(
-                    "absolute inset-x-0 bottom-0 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.18em]",
-                    "bg-bg/95 text-ink backdrop-blur-sm transition-opacity duration-300",
-                    i === active ? "opacity-100" : "opacity-0"
-                  )}
-                >
-                  {s.index} · {s.title.replace(/\.$/, "")}
-                </span>
-              </button>
-            ))}
-          </div>
+          {/* Right side intentionally empty — the orbit takes full width below */}
+          <div className="col-span-5" />
         </div>
 
-        {/* Tab bar */}
-        <div ref={tabBarRef} role="tablist" aria-label="Choisir une solution" className="mt-16">
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-0">
-            {solutions.map((s, i) => {
-              const selected = i === active;
-              return (
-                <button
-                  key={s.id}
-                  id={`tab-${s.id}`}
-                  role="tab"
-                  aria-selected={selected}
-                  aria-controls={`panel-${s.id}`}
-                  tabIndex={selected ? 0 : -1}
-                  onClick={() => goTo(i)}
-                  data-cursor="hover"
-                  className={cn(
-                    "relative flex flex-col items-start gap-1 px-2 py-5 text-left transition-colors",
-                    selected ? "text-white" : "text-white/45 hover:text-white"
-                  )}
-                >
-                  <span className="font-mono text-[11px] uppercase tracking-[0.18em]">
-                    {s.index}
-                  </span>
-                  <span className="text-base font-medium" style={{ letterSpacing: "-0.01em" }}>
-                    {s.title.replace(/\.$/, "")}
-                  </span>
+        {/* The orbit stage — spans full container width */}
+        <div ref={stageRef} className="relative mt-16 h-[400px] w-full">
+          {/* SVG orbit, full-width curve from edge to edge */}
+          <svg
+            viewBox="0 0 1200 400"
+            preserveAspectRatio="none"
+            className="absolute inset-0 h-full w-full"
+          >
+            <defs>
+              <linearGradient id="orbit-grad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="rgba(255,255,255,0.04)" />
+                <stop offset="50%" stopColor="rgba(255,255,255,0.18)" />
+                <stop offset="100%" stopColor="rgba(255,255,255,0.04)" />
+              </linearGradient>
+            </defs>
+            <path
+              ref={pathRef}
+              d="M30,160 Q600,360 1170,160"
+              fill="none"
+              stroke="url(#orbit-grad)"
+              strokeWidth="1.25"
+              strokeDasharray="4 8"
+            />
+          </svg>
 
-                  {/* Base hairline */}
-                  <span
-                    aria-hidden
-                    className="absolute inset-x-0 bottom-0 h-px bg-white/10"
-                  />
-                  {/* Progress fill */}
-                  <span
-                    aria-hidden
-                    data-tabfill={i}
-                    style={{
-                      transformOrigin: "left",
-                      transform: selected ? "scaleX(1)" : "scaleX(0)",
-                    }}
-                    className={cn(
-                      "absolute inset-x-0 bottom-0 h-px bg-azur",
-                      // For non-active tabs we keep a 0 scale
-                      !selected && "scale-x-0"
-                    )}
-                  />
-                </button>
-              );
-            })}
+          {/* Dots: small marker for each position */}
+          {expertises.map((s, i) => (
+            <span
+              key={`dot-${s.slug}`}
+              ref={(el) => { dotRefs.current[i] = el; }}
+              aria-hidden
+              className={cn(
+                "absolute left-0 top-0 block h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-500",
+                i === active
+                  ? "h-2 w-2 bg-azur shadow-[0_0_12px_rgba(0,166,166,0.6)]"
+                  : "bg-white/30"
+              )}
+              style={{ zIndex: 5 }}
+            />
+          ))}
+
+          {/* Labels: text under each curve point */}
+          {expertises.map((s, i) => (
+            <span
+              key={`label-${s.slug}`}
+              ref={(el) => { labelRefs.current[i] = el; }}
+              aria-hidden
+              className={cn(
+                "absolute left-0 top-0 block translate-y-6 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.18em] transition-colors duration-500",
+                i === active ? "text-azur" : "text-white/35"
+              )}
+              style={{ zIndex: 6, transform: "translate(-50%, 24px)" }}
+            >
+              {s.index} · {s.title}
+            </span>
+          ))}
+
+          {/* Planets (image discs) */}
+          {expertises.map((s, i) => (
+            <button
+              type="button"
+              key={s.slug}
+              ref={(el) => { planetRefs.current[i] = el; }}
+              onClick={() => goTo(i)}
+              aria-label={`Voir ${s.title}`}
+              data-cursor="hover"
+              className={cn(
+                "absolute left-0 top-0 h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full",
+                "border-2 transition-colors duration-500",
+                i === active ? "border-azur shadow-[0_0_60px_rgba(0,166,166,0.25)]" : "border-white/10"
+              )}
+              style={{ transformOrigin: "center" }}
+            >
+              <Image
+                src={s.image.src}
+                alt={s.image.alt}
+                fill
+                sizes="280px"
+                className="object-cover photo-treatment"
+              />
+              {/* Subtle radial sphere highlight for 3D feel */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 35%), radial-gradient(circle at 70% 80%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 60%)",
+                }}
+              />
+            </button>
+          ))}
+        </div>
+
+        {/* Controls — centered under the active position */}
+        <div className="mt-20 flex items-center justify-center gap-6">
+          <button
+            type="button"
+            onClick={() => goTo(active - 1)}
+            aria-label="Solution précédente"
+            data-cursor="hover"
+            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 text-white transition hover:border-white/60"
+          >
+            ←
+          </button>
+
+          <div className="relative">
+            <svg viewBox="0 0 40 40" className="h-12 w-12 -rotate-90" aria-hidden>
+              <circle cx="20" cy="20" r="18" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" fill="none" />
+              <circle
+                ref={progressRef}
+                cx="20"
+                cy="20"
+                r="18"
+                stroke="var(--color-azur)"
+                strokeWidth="1.5"
+                fill="none"
+                strokeLinecap="round"
+                style={{ strokeDasharray: CIRC, strokeDashoffset: CIRC }}
+              />
+            </svg>
+            <button
+              type="button"
+              onClick={() => setPaused((p) => !p)}
+              aria-label={paused ? "Reprendre l'auto-play" : "Mettre en pause"}
+              className="absolute inset-0 flex items-center justify-center text-white/80 transition hover:text-white"
+            >
+              {paused ? "▶" : "❚❚"}
+            </button>
           </div>
+
+          <button
+            type="button"
+            onClick={() => goTo(active + 1)}
+            aria-label="Solution suivante"
+            data-cursor="hover"
+            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 text-white transition hover:border-white/60"
+          >
+            →
+          </button>
+
+          <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
+            {String(active + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
+          </span>
+        </div>
+
+        {/* Tab list (a11y) — visually we have dots+labels above already; this is the keyboard tabs */}
+        <div role="tablist" aria-label="Choisir une solution" className="sr-only">
+          {expertises.map((s, i) => (
+            <button
+              key={s.slug}
+              id={`tab-${s.slug}`}
+              role="tab"
+              aria-selected={i === active}
+              aria-controls={`panel-${s.slug}`}
+              tabIndex={i === active ? 0 : -1}
+              onClick={() => goTo(i)}
+            >
+              {s.title}
+            </button>
+          ))}
         </div>
       </Container>
 
-      {/* Mobile fallback (Swiper) */}
-      <div className="md:hidden">
+      {/* Mobile fallback */}
+      <div className="lg:hidden">
         <SolutionsMobile />
       </div>
 

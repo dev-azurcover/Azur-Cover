@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { site } from "@/content/site";
-import { solutions } from "@/content/solutions";
+import { expertises } from "@/content/expertises";
 import { Container } from "@/components/ui/Container";
 
 function LinkedinIcon({ className }: { className?: string }) {
@@ -89,10 +89,10 @@ export function Footer() {
               Expertises
             </h3>
             <ul className="mt-5 space-y-2.5 text-sm">
-              {solutions.map((s) => (
-                <li key={s.id}>
-                  <Link href="#solutions" className="text-white/70 hover:text-white">
-                    {s.title.replace(/\.$/, "")}
+              {expertises.map((s) => (
+                <li key={s.slug}>
+                  <Link href={`/expertises/${s.slug}`} className="text-white/70 hover:text-white">
+                    {s.title}
                   </Link>
                 </li>
               ))}
@@ -105,23 +105,28 @@ export function Footer() {
             </h3>
             <ul className="mt-5 space-y-2.5 text-sm">
               <li>
-                <Link href="#methodologie" className="text-white/70 hover:text-white">
+                <Link href="/qui-sommes-nous" className="text-white/70 hover:text-white">
                   Qui sommes-nous
                 </Link>
               </li>
               <li>
-                <Link href="#realisations" className="text-white/70 hover:text-white">
+                <Link href="/realisations" className="text-white/70 hover:text-white">
                   Réalisations
                 </Link>
               </li>
               <li>
-                <Link href="#contact" className="text-white/70 hover:text-white">
+                <Link href="/presse" className="text-white/70 hover:text-white">
                   Presse
                 </Link>
               </li>
               <li>
-                <Link href="#contact" className="text-white/70 hover:text-white">
-                  Carrières
+                <Link href="/faq" className="text-white/70 hover:text-white">
+                  FAQ
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="text-white/70 hover:text-white">
+                  Contact
                 </Link>
               </li>
             </ul>
@@ -162,10 +167,10 @@ export function Footer() {
         <div className="mt-16 flex flex-col gap-3 border-t border-white/10 pt-6 font-mono text-[11px] uppercase tracking-[0.15em] text-white/40 md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} Azur Cover. Tous droits réservés.</p>
           <div className="flex flex-wrap gap-x-5 gap-y-1">
-            <Link href="#" className="hover:text-white/70">Mentions légales</Link>
-            <Link href="#" className="hover:text-white/70">CGV</Link>
-            <Link href="#" className="hover:text-white/70">Confidentialité</Link>
-            <Link href="#" className="hover:text-white/70">Cookies</Link>
+            <Link href="/mentions-legales" className="hover:text-white/70">Mentions légales</Link>
+            <Link href="/cgv" className="hover:text-white/70">CGV</Link>
+            <Link href="/confidentialite" className="hover:text-white/70">Confidentialité</Link>
+            <Link href="/cookies" className="hover:text-white/70">Cookies</Link>
           </div>
         </div>
 

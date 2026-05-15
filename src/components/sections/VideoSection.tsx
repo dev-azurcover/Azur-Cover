@@ -63,13 +63,13 @@ export function VideoSection() {
         </div>
 
         <div className="relative mx-auto mt-16 max-w-[1100px]">
-          {/* Decorative characters (xl+) */}
+          {/* Decorative characters — flank the player at its mid-height (xl+) */}
           <div
             aria-hidden
-            className="pointer-events-none absolute -bottom-2 -left-32 hidden h-[440px] w-[220px] xl:block"
+            className="pointer-events-none absolute top-1/2 left-0 hidden h-[80%] w-[200px] -translate-x-[calc(100%-12px)] -translate-y-1/2 xl:block"
             style={{
-              opacity: started ? 0.3 : 1,
-              transform: started ? "translateX(-20px)" : "translateX(0)",
+              opacity: started ? 0.25 : 1,
+              transform: `translateY(-50%) translateX(${started ? "calc(-100% - 12px)" : "calc(-100% + 12px)"})`,
               transition:
                 "opacity 600ms cubic-bezier(0.16,1,0.3,1), transform 600ms cubic-bezier(0.16,1,0.3,1)",
             }}
@@ -78,16 +78,16 @@ export function VideoSection() {
               src="/images/characters/left.png"
               alt=""
               fill
-              sizes="220px"
-              className="object-contain object-bottom"
+              sizes="200px"
+              className="object-contain object-right-bottom"
             />
           </div>
           <div
             aria-hidden
-            className="pointer-events-none absolute -bottom-2 -right-32 hidden h-[440px] w-[220px] xl:block"
+            className="pointer-events-none absolute top-1/2 right-0 hidden h-[80%] w-[200px] translate-x-[calc(100%-12px)] -translate-y-1/2 xl:block"
             style={{
-              opacity: started ? 0.3 : 1,
-              transform: started ? "translateX(20px)" : "translateX(0)",
+              opacity: started ? 0.25 : 1,
+              transform: `translateY(-50%) translateX(${started ? "calc(100% + 12px)" : "calc(100% - 12px)"})`,
               transition:
                 "opacity 600ms cubic-bezier(0.16,1,0.3,1), transform 600ms cubic-bezier(0.16,1,0.3,1)",
             }}
@@ -96,8 +96,8 @@ export function VideoSection() {
               src="/images/characters/right.png"
               alt=""
               fill
-              sizes="220px"
-              className="object-contain object-bottom"
+              sizes="200px"
+              className="object-contain object-left-bottom"
             />
           </div>
 
@@ -117,13 +117,9 @@ export function VideoSection() {
                 type="video/mp4"
                 media="(max-width: 768px)"
               />
-              <source
-                src="/video/azur-cover-presentation.mp4"
-                type="video/mp4"
-              />
+              <source src="/video/azur-cover-presentation.mp4" type="video/mp4" />
             </video>
 
-            {/* Big play overlay */}
             <button
               type="button"
               onClick={togglePlay}
@@ -141,7 +137,6 @@ export function VideoSection() {
               </span>
             </button>
 
-            {/* Bottom controls (after first start) */}
             <div
               className={cn(
                 "absolute inset-x-3 bottom-3 flex items-center justify-between transition-opacity duration-300",
@@ -154,11 +149,7 @@ export function VideoSection() {
                 aria-label={muted ? "Activer le son" : "Couper le son"}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-graphite/70 text-white backdrop-blur transition hover:bg-graphite/90"
               >
-                {muted ? (
-                  <VolumeX className="h-4 w-4" aria-hidden />
-                ) : (
-                  <Volume2 className="h-4 w-4" aria-hidden />
-                )}
+                {muted ? <VolumeX className="h-4 w-4" aria-hidden /> : <Volume2 className="h-4 w-4" aria-hidden />}
               </button>
               <button
                 type="button"

@@ -66,16 +66,17 @@ export function Header() {
           <div className="flex items-center gap-2">
             <div className="hidden lg:block">
               {scrolled ? (
-                <Button href="#contact" arrow>
+                <Button href="/contact" arrow>
                   Demander un audit
                 </Button>
               ) : (
                 <Link
-                  href="#contact"
+                  href="/contact"
                   data-cursor="hover"
-                  className="inline-flex h-10 items-center justify-center rounded-lg border border-ink/30 px-5 text-sm font-medium text-ink transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px hover:border-ink hover:bg-ink/5"
+                  className="group inline-flex items-center gap-2 text-sm font-medium text-ink underline-grow"
                 >
                   Demander un audit
+                  <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                 </Link>
               )}
             </div>

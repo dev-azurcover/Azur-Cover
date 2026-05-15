@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { A11y, Keyboard } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
+import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { realisations } from "@/content/realisations";
 import { Container } from "@/components/ui/Container";
@@ -98,7 +99,7 @@ export function Realisations() {
                 </button>
 
                 <div className="ml-2 flex flex-1 items-center gap-1">
-                  {realisations.map((_, i) => (
+                  {realisations.slice(0, 8).map((_, i) => (
                     <span
                       key={i}
                       aria-hidden
@@ -109,6 +110,17 @@ export function Realisations() {
                     />
                   ))}
                 </div>
+              </div>
+
+              <div className="mt-10">
+                <Link
+                  href="/realisations"
+                  data-cursor="hover"
+                  className="inline-flex items-center gap-2 text-sm font-medium text-ink underline-grow"
+                >
+                  Voir toutes les réalisations
+                  <span aria-hidden>→</span>
+                </Link>
               </div>
             </div>
           </div>
@@ -130,9 +142,13 @@ export function Realisations() {
               }}
               className="!overflow-visible"
             >
-              {realisations.map((r) => (
-                <SwiperSlide key={r.id}>
-                  <article>
+              {realisations.slice(0, 8).map((r) => (
+                <SwiperSlide key={r.slug}>
+                  <Link
+                    href={`/realisations/${r.slug}`}
+                    className="group block"
+                    data-cursor="hover"
+                  >
                     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md border border-line/60 bg-bg">
                       <Image
                         src={r.image.src}
@@ -149,7 +165,7 @@ export function Realisations() {
                     <h3 className="mt-1 text-ink" style={{ fontSize: "1.125rem", fontWeight: 500 }}>
                       {r.title}
                     </h3>
-                  </article>
+                  </Link>
                 </SwiperSlide>
               ))}
             </Swiper>

@@ -12,7 +12,6 @@ import { SolutionsMobile } from "./SolutionsMobile";
 
 const N = expertises.length;
 const AUTOPLAY_MS = 8000;
-const CIRC = 113; // 2π · r=18
 
 /**
  * Orbital wheel à la Thales. 4 planets always visible, distributed around
@@ -58,7 +57,6 @@ function slotForOffset(offset: number): Slot {
 export function SolutionsCarousel() {
   const sectionRef = useRef<HTMLElement>(null);
   const planetRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const progressRef = useRef<SVGCircleElement>(null);
 
   const [active, setActive] = useState(0);
   // Hover/focus pauses the auto-play (the manual pause button has been removed).
@@ -127,39 +125,16 @@ export function SolutionsCarousel() {
     if (!isDesktop) isFirstLayout.current = true;
   }, [isDesktop]);
 
-  // Autoplay + circular progress.
-  // Both the timeout AND the GSAP progress tween must be cleaned up on
-  // pause / unmount, otherwise the chrono keeps spinning visually after
-  // the user clicks the pause button.
+  // Autoplay. paused on hover/focus.
   useEffect(() => {
     if (!isDesktop) return;
+    if (paused) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const circle = progressRef.current;
-
-    if (paused) {
-      // Freeze the visual chrono in place
-      if (circle) gsap.killTweensOf(circle);
-      return;
-    }
-
-    if (circle) {
-      gsap.killTweensOf(circle);
-      gsap.set(circle, { strokeDashoffset: CIRC });
-      gsap.to(circle, {
-        strokeDashoffset: 0,
-        duration: AUTOPLAY_MS / 1000,
-        ease: "none",
-      });
-    }
     const t = window.setTimeout(() => {
       setActive((i) => (i + 1) % N);
     }, AUTOPLAY_MS);
-
-    return () => {
-      window.clearTimeout(t);
-      if (circle) gsap.killTweensOf(circle);
-    };
+    return () => window.clearTimeout(t);
   }, [active, paused, isDesktop]);
 
   const goTo = useCallback((i: number) => {
@@ -283,21 +258,6 @@ export function SolutionsCarousel() {
                   ←
                 </button>
 
-                <svg viewBox="0 0 40 40" className="h-11 w-11 -rotate-90" aria-hidden>
-                  <circle cx="20" cy="20" r="18" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" fill="none" />
-                  <circle
-                    ref={progressRef}
-                    cx="20"
-                    cy="20"
-                    r="18"
-                    stroke="var(--color-azur)"
-                    strokeWidth="1.5"
-                    fill="none"
-                    strokeLinecap="round"
-                    style={{ strokeDasharray: CIRC, strokeDashoffset: CIRC }}
-                  />
-                </svg>
-
                 <button
                   type="button"
                   onClick={() => goTo(active + 1)}
@@ -403,6 +363,7 @@ export function SolutionsCarousel() {
                     fill
                     sizes="420px"
                     className="object-cover"
+                    priority
                   />
                   {/* Sphere highlight */}
                   <span
@@ -416,19 +377,29 @@ export function SolutionsCarousel() {
                   />
                 </span>
 
-                {/* Active caption. under the planet, only when active */}
-                {i === active && (
-                  <span
-                    aria-hidden
-                    className="planet-caption pointer-events-none absolute left-1/2 top-full mt-6 -translate-x-1/2 whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.22em] text-white/85"
-                  >
-                    <span className="text-azur">{s.index}</span>
-                    <span className="mx-2 text-white/30">·</span>
-                    {s.title}
-                  </span>
-                )}
               </button>
             ))}
+
+            {/* Active caption. positioned in the stage (NOT inside the planet)
+                so it is immune to the planet's GSAP transform/scale. Pinned to
+                the active slot's coordinates, then offset vertically by the
+                planet's half-height + a constant gap. */}
+            <span
+              key={`cap-${active}`}
+              aria-hidden
+              className="planet-caption pointer-events-none absolute z-[60] whitespace-nowrap font-mono text-[12px] uppercase tracking-[0.22em] text-white/85"
+              style={{
+                left: `${SLOTS[0].x}%`,
+                top: `${SLOTS[0].y}%`,
+                // active planet base size is clamp(280,30vw,420), scale 0.85,
+                // so half-height ≈ clamp(119px, 12.75vw, 178.5px). Add 28px gap.
+                transform: `translate(-50%, calc(clamp(119px, 12.75vw, 178.5px) + 28px))`,
+              }}
+            >
+              <span className="text-azur">{expertises[active].index}</span>
+              <span className="mx-2 text-white/30">·</span>
+              {expertises[active].title}
+            </span>
           </div>
         </div>
       )}
@@ -471,8 +442,8 @@ export function SolutionsCarousel() {
           animation-delay: 350ms;
         }
         @keyframes caption-in {
-          from { opacity: 0; transform: translate(-50%, -4px); }
-          to   { opacity: 1; transform: translate(-50%, 0); }
+          from { opacity: 0; }
+          to   { opacity: 1; }
         }
 
         .dust {

@@ -20,6 +20,24 @@ function isString(v: unknown): v is string {
   return typeof v === "string";
 }
 
+// In-memory rate limit. Map<ip, lastRequestTimestamp>.
+// On Vercel Fluid Compute, a function instance handles many concurrent
+// requests in the same process, so this Map is shared across requests
+// hitting the same instance. It's a best-effort defense against
+// casual abuse, NOT a hard cryptographic limit (a determined attacker
+// rotating IPs / hitting cold instances would bypass it).
+// 1 request per IP per 60 seconds.
+const RATE_WINDOW_MS = 60_000;
+const lastSeen = new Map<string, number>();
+
+function getClientIp(req: Request): string {
+  const fwd = req.headers.get("x-forwarded-for");
+  if (fwd) return fwd.split(",")[0].trim();
+  const real = req.headers.get("x-real-ip");
+  if (real) return real.trim();
+  return "unknown";
+}
+
 function escapeHtml(s: string): string {
   return s
     .replace(/&/g, "&amp;")
@@ -37,6 +55,18 @@ export async function POST(req: Request) {
     return NextResponse.json(
       { error: "Service email indisponible. Écrivez-nous à " + site.email + "." },
       { status: 500 }
+    );
+  }
+
+  // Rate-limit per IP. Cheap protection against form spam.
+  const ip = getClientIp(req);
+  const now = Date.now();
+  const last = lastSeen.get(ip);
+  if (last && now - last < RATE_WINDOW_MS) {
+    const retryAfter = Math.ceil((RATE_WINDOW_MS - (now - last)) / 1000);
+    return NextResponse.json(
+      { error: `Trop de demandes. Réessayez dans ${retryAfter} s.` },
+      { status: 429, headers: { "Retry-After": String(retryAfter) } }
     );
   }
 
@@ -134,6 +164,8 @@ export async function POST(req: Request) {
         { status: 502 }
       );
     }
+    // Mark this IP as just used. Only on success — failed attempts don't lock out.
+    lastSeen.set(ip, now);
     return NextResponse.json({ ok: true, id: data?.id });
   } catch (err) {
     console.error("Resend threw:", err);

@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { site } from "@/content/site";
 import { expertises } from "@/content/expertises";
 import "./globals.css";
@@ -144,6 +146,8 @@ export default function RootLayout({
         {children}
         {/* Static JSON-LD graph. rendered inline so crawlers see it on first byte */}
         <script type="application/ld+json">{jsonLd}</script>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -109,22 +109,47 @@ export function Contact() {
             </ScrollReveal>
           </div>
 
-          {/* Right. Map */}
+          {/* Right. B&W Map preview that opens Apple Plans on click */}
           <ScrollReveal delay={120}>
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md border border-line/60 bg-white lg:aspect-square">
+            <a
+              href={site.mapDeepLink}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="group relative block aspect-[4/3] w-full overflow-hidden rounded-md border border-line/60 bg-graphite text-white transition-shadow hover:shadow-[0_30px_80px_-30px_rgba(0,0,0,0.4)] lg:aspect-square"
+              aria-label={`Itinéraire vers ${site.address.full}`}
+            >
               <iframe
                 src={site.mapEmbed}
                 title={`Carte. ${site.address.full}`}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                className="absolute inset-0 h-full w-full"
+                aria-hidden
+                tabIndex={-1}
+                className="pointer-events-none absolute inset-0 h-full w-full"
+                style={{
+                  filter: "grayscale(1) contrast(1.05) brightness(0.95)",
+                }}
               />
-            </div>
-            <a
-              href={site.mapDeepLink}
-              className="mt-3 inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.18em] text-muted hover:text-ink lg:hidden"
-            >
-              Ouvrir dans Plans →
+
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-graphite via-graphite/30 to-transparent"
+              />
+
+              <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-4 p-6 md:p-8">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/55">
+                    Notre siège
+                  </p>
+                  <p className="mt-2 text-lg font-medium text-white" style={{ letterSpacing: "-0.01em" }}>
+                    {site.address.building}, {site.address.city}
+                  </p>
+                </div>
+                <span className="inline-flex items-center gap-2 text-sm font-medium text-white underline-grow">
+                  Ouvrir l&apos;itinéraire
+                  <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </span>
+              </div>
             </a>
           </ScrollReveal>
         </div>

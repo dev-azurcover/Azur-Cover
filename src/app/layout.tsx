@@ -4,6 +4,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { site } from "@/content/site";
 import { expertises } from "@/content/expertises";
+import { CommandPalette } from "@/components/layout/CommandPalette";
+import { ScrollProgress } from "@/components/layout/ScrollProgress";
 import "./globals.css";
 
 const inter = localFont({
@@ -143,7 +145,9 @@ export default function RootLayout({
         <a href="#main" className="skip-link">
           Aller au contenu principal
         </a>
+        <ScrollProgress />
         {children}
+        <CommandPalette />
         {/* Static JSON-LD graph. rendered inline so crawlers see it on first byte */}
         <script type="application/ld+json">{jsonLd}</script>
         <Analytics />

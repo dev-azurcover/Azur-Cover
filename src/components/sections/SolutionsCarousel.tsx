@@ -2,30 +2,34 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import gsap from "gsap";
-import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { expertises } from "@/content/expertises";
 import { cn } from "@/lib/utils";
 import { SolutionsMobile } from "./SolutionsMobile";
 
 const N = expertises.length;
-const AUTOPLAY_MS = 8000;
+// Plus lent = plus premium. Thales tourne à ~10s par slide, on s'aligne.
+const AUTOPLAY_MS = 10000;
+const TRANSITION_MS = 1800;
 
-/**
- * Orbital wheel à la Thales. 4 planets always visible, distributed around
- * the stage. When `active` changes, every planet shifts ONE position along
- * the orbit (counter-clockwise: 1 → 0 → 3 → 2 → 1).
- *
- * Coordinates are RELATIVE TO THE STAGE (right column of the grid):
- *   x: % from the LEFT of the stage (0 = stage left edge, 100 = stage right edge)
- *   y: % from the TOP of the stage  (0 = top, 100 = bottom)
- *
- * Slot 3 (previous) is placed UPPER-LEFT of the stage. high enough that
- * it sits ABOVE the text panel's vertical centre, so the two never visually
- * collide even though the text panel is just to the left of the stage.
- */
+// Tint par solution — encore plus subtil qu'avant, juste un voile.
+const TINTS: Record<string, string> = {
+  etancheite: "rgba(40, 80, 120, 0.22)",
+  "cool-roofing": "rgba(190, 170, 130, 0.20)",
+  "azur-reflect": "rgba(0, 140, 140, 0.24)",
+  autres: "rgba(110, 114, 128, 0.18)",
+};
+const TINT_FALLBACK = "rgba(60, 60, 65, 0.20)";
+
 type Slot = {
   x: number;
   y: number;
@@ -35,23 +39,33 @@ type Slot = {
   saturate: number;
   brightness: number;
   z: number;
-  rotation: number;
 };
 
-// Orbital arrangement: planets sit on a clockwise wheel.
-// Cycle each planet visits, on each "next": slot 1 → 0 → 3 → 2 → 1 → …
-//   That sequence forms a smooth clockwise rotation:
-//   right → centre → upper-left → top → upper-right → right …
-// All four jumps are short, no teleport across the stage.
+// Active devient HÉROÏQUE (scale 1.0, full saturation). Autres deviennent
+// quasi fantomatiques (0.20 opacity, blur 14px) — l'œil ne lit que l'active.
 const SLOTS: Record<number, Slot> = {
-  0: { x: 52, y: 55, scale: 0.85, opacity: 1.00, blur: 0,  saturate: 1.0,  brightness: 1.0,  z: 50, rotation: 0   }, // ACTIVE. centre
-  1: { x: 92, y: 30, scale: 0.42, opacity: 0.55, blur: 7,  saturate: 0.35, brightness: 0.72, z: 30, rotation: 0  }, // NEXT. upper-right
-  2: { x: 60, y: 10, scale: 0.30, opacity: 0.30, blur: 12, saturate: 0.15, brightness: 0.6,  z: 20, rotation: 0  }, // QUEUE. top
-  3: { x: 14, y: 22, scale: 0.42, opacity: 0.55, blur: 7,  saturate: 0.35, brightness: 0.72, z: 30, rotation: 0  }, // PREV. upper-left (above text)
+  0: { x: 52, y: 50, scale: 1.0,  opacity: 1.0,  blur: 0,  saturate: 1.0,  brightness: 1.0,  z: 50 },
+  1: { x: 95, y: 28, scale: 0.32, opacity: 0.22, blur: 14, saturate: 0.2,  brightness: 0.55, z: 30 },
+  2: { x: 60, y: 6,  scale: 0.22, opacity: 0.14, blur: 18, saturate: 0.1,  brightness: 0.45, z: 20 },
+  3: { x: 9,  y: 22, scale: 0.32, opacity: 0.22, blur: 14, saturate: 0.2,  brightness: 0.55, z: 30 },
 };
 
 function slotForOffset(offset: number): Slot {
   return SLOTS[offset] ?? SLOTS[0];
+}
+
+const DESKTOP_MQ = "(min-width: 1024px)";
+function subscribeDesktop(callback: () => void) {
+  if (typeof window === "undefined") return () => {};
+  const mq = window.matchMedia(DESKTOP_MQ);
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
+}
+function getDesktopSnapshot() {
+  return typeof window !== "undefined" && window.matchMedia(DESKTOP_MQ).matches;
+}
+function getDesktopServerSnapshot() {
+  return false;
 }
 
 export function SolutionsCarousel() {
@@ -59,19 +73,13 @@ export function SolutionsCarousel() {
   const planetRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const [active, setActive] = useState(0);
-  // Hover/focus pauses the auto-play (the manual pause button has been removed).
   const [paused, setPaused] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => {
-    setIsMounted(true);
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const update = () => setIsDesktop(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
+  const isDesktop = useSyncExternalStore(
+    subscribeDesktop,
+    getDesktopSnapshot,
+    getDesktopServerSnapshot,
+  );
 
   const layout = useCallback(
     (immediate = false) => {
@@ -80,11 +88,6 @@ export function SolutionsCarousel() {
         const offset = (i - active + N) % N;
         const slot = slotForOffset(offset);
         el.style.zIndex = String(slot.z);
-
-        // Single tween. position, scale, opacity, rotation, filter all
-        // synced for a coherent "wheel rotation" feel. Stagger by 80ms per
-        // planet index for a subtle wave.
-        const stagger = immediate ? 0 : (offset * 0.08);
         gsap.to(el, {
           left: `${slot.x}%`,
           top: `${slot.y}%`,
@@ -92,48 +95,42 @@ export function SolutionsCarousel() {
           yPercent: -50,
           scale: slot.scale,
           opacity: slot.opacity,
-          rotation: slot.rotation,
           filter: `blur(${slot.blur}px) saturate(${slot.saturate}) brightness(${slot.brightness})`,
-          duration: immediate ? 0 : 1.4,
-          delay: stagger,
-          ease: "power2.inOut",
+          duration: immediate ? 0 : TRANSITION_MS / 1000,
+          // power3.inOut = plus lent en début/fin, courbe plus cinématique
+          ease: "power3.inOut",
           overwrite: "auto",
-          onStart: () => { el.style.willChange = "transform, opacity, filter"; },
-          onComplete: () => { el.style.willChange = "auto"; },
+          onStart: () => {
+            el.style.willChange = "transform, opacity, filter";
+          },
+          onComplete: () => {
+            el.style.willChange = "auto";
+          },
         });
       });
     },
-    [active]
+    [active],
   );
 
-  // Single positioning effect: first run = immediate (set positions before
-  // first paint via useLayoutEffect), subsequent runs = animated.
-  // useEffect would let one frame paint at (0,0) before positioning.
   const isFirstLayout = useRef(true);
   useLayoutEffect(() => {
-    if (!isMounted || !isDesktop) return;
+    if (!isDesktop) return;
     if (isFirstLayout.current) {
       layout(true);
       isFirstLayout.current = false;
     } else {
-      layout(false); // animated
+      layout(false);
     }
-  }, [active, isMounted, isDesktop, layout]);
+  }, [active, isDesktop, layout]);
 
-  // Reset first-paint flag when desktop mode toggles (e.g. on resize)
   useEffect(() => {
     if (!isDesktop) isFirstLayout.current = true;
   }, [isDesktop]);
 
-  // Autoplay. paused on hover/focus.
   useEffect(() => {
-    if (!isDesktop) return;
-    if (paused) return;
+    if (!isDesktop || paused) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const t = window.setTimeout(() => {
-      setActive((i) => (i + 1) % N);
-    }, AUTOPLAY_MS);
+    const t = window.setTimeout(() => setActive((i) => (i + 1) % N), AUTOPLAY_MS);
     return () => window.clearTimeout(t);
   }, [active, paused, isDesktop]);
 
@@ -141,22 +138,23 @@ export function SolutionsCarousel() {
     setActive(((i % N) + N) % N);
   }, []);
 
-  // Keyboard
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (!sectionRef.current?.contains(document.activeElement)) return;
-      if (e.key === "ArrowRight") { e.preventDefault(); goTo(active + 1); }
-      else if (e.key === "ArrowLeft") { e.preventDefault(); goTo(active - 1); }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        goTo(active + 1);
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goTo(active - 1);
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [active, goTo]);
 
-  if (!isMounted) {
-    return <section className="min-h-screen bg-[#0e0e11]" />;
-  }
-
   const current = expertises[active];
+  const tint = TINTS[current.slug] ?? TINT_FALLBACK;
 
   return (
     <section
@@ -167,77 +165,103 @@ export function SolutionsCarousel() {
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
-      className="relative overflow-hidden text-white bg-[#0e0e11]"
-      style={{
-        background: isDesktop
-          ? "radial-gradient(ellipse 70% 80% at 75% 50%, #2a2a2d 0%, #0e0e11 80%)"
-          : undefined,
-        minHeight: isDesktop ? "100vh" : "auto",
-      }}
+      className="relative overflow-hidden bg-[#0a0a0c] text-white"
+      style={
+        {
+          "--tint": tint,
+          background: isDesktop
+            ? "radial-gradient(ellipse 75% 90% at 72% 50%, var(--tint), #0a0a0c 75%)"
+            : undefined,
+          transition: "background 2200ms cubic-bezier(0.16,1,0.3,1)",
+          minHeight: isDesktop ? "100vh" : "auto",
+        } as React.CSSProperties
+      }
     >
-      {/* Ambient dust */}
-      {isDesktop && (
-        <div aria-hidden className="pointer-events-none absolute inset-0 z-0 opacity-50 dust" />
-      )}
-
-      {/* Desktop layout. 2-column grid: text 40% / planets stage 60% */}
+      {/* Desktop layout */}
       {isDesktop && (
         <div className="relative grid h-screen min-h-[820px] grid-cols-12 z-10">
-          {/* Text column */}
+          {/* Text column — plus de place, typo plus généreuse */}
           <div
             role="tabpanel"
             id={`panel-${current.slug}`}
             aria-labelledby={`tab-a11y-${current.slug}`}
             tabIndex={0}
-            className="col-span-5 flex items-center pl-[clamp(40px,6vw,120px)] pr-8 z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azur focus-visible:ring-offset-4 focus-visible:ring-offset-[#0e0e11]"
+            className="col-span-5 flex items-center pl-[clamp(48px,7vw,140px)] pr-12 z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azur focus-visible:ring-offset-4 focus-visible:ring-offset-[#0a0a0c]"
           >
-            <div className="w-full max-w-[460px]">
+            <div className="w-full max-w-[500px]">
               <Eyebrow tone="white" id="solutions-h">
                 Nos solutions
               </Eyebrow>
 
-              {/* Crossfade text */}
-              <div className="relative mt-8 min-h-[420px]">
+              <div className="relative mt-10 min-h-[460px]">
                 {expertises.map((s, i) => (
                   <div
                     key={s.slug}
                     aria-hidden={i !== active}
                     className={cn(
-                      "absolute inset-0 transition-all duration-[900ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
+                      "absolute inset-0 transition-opacity duration-[1400ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
                       i === active
-                        ? "opacity-100 translate-y-0 pointer-events-auto"
-                        : "opacity-0 translate-y-4 pointer-events-none"
+                        ? "opacity-100 pointer-events-auto"
+                        : "opacity-0 pointer-events-none",
                     )}
                   >
+                    {/* Title : mask reveal mot par mot (clean, plus subtil que slide+fade) */}
                     <h2
-                      className="text-white"
+                      key={`h2-${s.slug}-${i === active ? "a" : "i"}`}
+                      className="text-white solutions-title"
                       style={{
-                        fontSize: "clamp(2.5rem, 4vw, 4.5rem)",
+                        fontSize: "clamp(3rem, 4.6vw, 5.5rem)",
                         fontWeight: 600,
-                        letterSpacing: "-0.03em",
-                        lineHeight: 0.95,
+                        letterSpacing: "-0.035em",
+                        lineHeight: 0.96,
                       }}
+                      aria-label={`${s.title}.`}
                     >
-                      {s.title}.
+                      {(s.title + ".").split(/(\s+)/).map((part, idx) =>
+                        /^\s+$/.test(part) ? (
+                          <span key={idx}>{part}</span>
+                        ) : (
+                          <span
+                            key={idx}
+                            aria-hidden
+                            className="solutions-title-word"
+                            style={{ animationDelay: i === active ? `${idx * 90}ms` : "0ms" }}
+                          >
+                            <span className="solutions-title-word-inner">{part}</span>
+                          </span>
+                        ),
+                      )}
                     </h2>
+
                     <p
-                      className="mt-7 text-white/70"
-                      style={{ fontSize: "1.0625rem", lineHeight: 1.6 }}
+                      className="mt-8 text-white/65"
+                      style={{
+                        fontSize: "1.1rem",
+                        lineHeight: 1.65,
+                        animationDelay: `${(s.title.split(" ").length + 2) * 90}ms`,
+                      }}
                     >
                       {s.short}
                     </p>
-                    <ul className="mt-7 space-y-2.5">
+
+                    <ul className="mt-8 space-y-3">
                       {s.bullets.slice(0, 4).map((b) => (
-                        <li key={b} className="flex items-start gap-3 text-sm text-white/80">
-                          <span aria-hidden className="mt-2 inline-block h-px w-4 shrink-0 bg-azur" />
+                        <li
+                          key={b}
+                          className="flex items-start gap-3 text-sm text-white/75"
+                        >
+                          <span
+                            aria-hidden
+                            className="mt-2 inline-block h-px w-5 shrink-0 bg-azur"
+                          />
                           {b}
                         </li>
                       ))}
                     </ul>
+
                     <Link
                       href={`/expertises/${s.slug}`}
-
-                      className="underline-grow mt-8 inline-flex items-center gap-2 text-sm font-medium text-white"
+                      className="underline-grow mt-10 inline-flex items-center gap-2 text-sm font-medium text-white"
                     >
                       {s.cta}
                       <span aria-hidden>→</span>
@@ -246,161 +270,96 @@ export function SolutionsCarousel() {
                 ))}
               </div>
 
-              {/* Controls. sit BELOW the min-height text block, never overlap */}
-              <div className="mt-12 flex items-center gap-5">
+              {/* Compteur + arrows — minimaliste, pas de pagination redondante */}
+              <div className="mt-14 flex items-center gap-5">
                 <button
                   type="button"
                   onClick={() => goTo(active - 1)}
                   aria-label="Solution précédente"
-
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition hover:border-white/60 hover:bg-white/5"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/75 transition hover:border-white/50 hover:text-white"
                 >
                   ←
                 </button>
-
                 <button
                   type="button"
                   onClick={() => goTo(active + 1)}
                   aria-label="Solution suivante"
-
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition hover:border-white/60 hover:bg-white/5"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/75 transition hover:border-white/50 hover:text-white"
                 >
                   →
                 </button>
-
-                <span className="ml-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
+                <span className="ml-2 font-mono text-[11px] uppercase tracking-[0.22em] text-white/35">
                   {String(active + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
                 </span>
-              </div>
-
-              {/* Pagination dots, separate from controls so they don't compete */}
-              <div className="mt-6 flex items-center gap-2">
-                {expertises.map((s, i) => (
-                  <button
-                    key={s.slug}
-                    type="button"
-                    onClick={() => goTo(i)}
-                    aria-label={`Aller à ${s.title}`}
-                    className="group relative h-6 w-12 flex items-center"
-                  >
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "h-px w-full transition-colors duration-500",
-                        i === active ? "bg-azur" : "bg-white/15 group-hover:bg-white/30"
-                      )}
-                    />
-                  </button>
-                ))}
               </div>
             </div>
           </div>
 
-          {/* Planets stage. right 60%, isolated from text column */}
+          {/* Planets stage — épuré : pas d'orbit SVG, pas de ring, pas de caption */}
           <div className="col-span-7 relative">
-            {/* Orbit decoration. a full elliptical wheel, dim and dotted */}
-            <svg
-              aria-hidden
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              className="absolute inset-0 h-full w-full"
-            >
-              <ellipse
-                cx="52"
-                cy="40"
-                rx="42"
-                ry="32"
-                fill="none"
-                stroke="rgba(255,255,255,0.10)"
-                strokeWidth="0.15"
-                strokeDasharray="0.6 1.2"
-                vectorEffect="non-scaling-stroke"
-              />
-            </svg>
-
-            {/* Planet buttons. positioned EXCLUSIVELY by GSAP. We must NOT
-                pass any style={{ left, top, transform, opacity }} on the JSX
-                because React would re-apply them on every render and instantly
-                teleport the planets, killing the animation. */}
             {expertises.map((s, i) => (
               <button
                 type="button"
                 key={s.slug}
-                ref={(el) => { planetRefs.current[i] = el; }}
+                ref={(el) => {
+                  planetRefs.current[i] = el;
+                }}
                 onClick={() => goTo(i)}
                 aria-label={`Voir ${s.title}`}
-
                 className={cn(
-                  "planet group absolute left-0 top-0 h-[clamp(280px,30vw,420px)] w-[clamp(280px,30vw,420px)] overflow-visible rounded-full",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azur focus-visible:ring-offset-4 focus-visible:ring-offset-[#0e0e11]"
+                  "planet group absolute left-0 top-0 h-[clamp(320px,32vw,460px)] w-[clamp(320px,32vw,460px)] overflow-visible rounded-full",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azur focus-visible:ring-offset-4 focus-visible:ring-offset-[#0a0a0c]",
+                  i === active && "planet-active",
                 )}
-                /* No inline style. GSAP owns left/top/transform/opacity */
               >
-                {/* Active glow ring (rotating) */}
-                {i === active && (
-                  <span
-                    aria-hidden
-                    className="planet-ring pointer-events-none absolute -inset-2 rounded-full"
-                    style={{
-                      background:
-                        "conic-gradient(from 0deg, rgba(0,166,166,0) 0deg, rgba(0,166,166,0.45) 80deg, rgba(0,166,166,0) 160deg, rgba(0,166,166,0) 360deg)",
-                      filter: "blur(8px)",
-                    }}
-                  />
-                )}
-
                 <span
                   className={cn(
                     "absolute inset-0 overflow-hidden rounded-full transition-[border,box-shadow] duration-700",
                     i === active
-                      ? "border border-azur shadow-[0_0_80px_rgba(0,166,166,0.18)]"
-                      : "border border-white/10 group-hover:border-white/30"
+                      ? "border border-white/20 shadow-[0_30px_100px_-20px_rgba(0,0,0,0.6),inset_0_0_60px_rgba(0,0,0,0.3)]"
+                      : "border border-white/8",
                   )}
                 >
-                  <Image
-                    src={s.image.src}
-                    alt={s.image.alt}
-                    fill
-                    sizes="420px"
-                    className="object-cover"
-                    priority
-                  />
-                  {/* Sphere highlight */}
+                  <div
+                    key={`kb-${i}-${active}`}
+                    className={cn(
+                      "absolute inset-0",
+                      i === active && "ken-burns",
+                    )}
+                  >
+                    <Image
+                      src={s.image.src}
+                      alt={s.image.alt}
+                      fill
+                      sizes="460px"
+                      className="object-cover"
+                      priority
+                    />
+                  </div>
+                  {/* Sphère : ombre interne très douce */}
                   <span
                     aria-hidden
                     className="pointer-events-none absolute inset-0 rounded-full"
                     style={{
                       background:
-                        "radial-gradient(circle at 30% 25%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 40%), radial-gradient(circle at 70% 80%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 60%)",
-                      boxShadow: "inset 0 0 40px rgba(0,0,0,0.5)",
+                        "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 38%), radial-gradient(circle at 72% 78%, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 55%)",
                     }}
                   />
+                  {/* Reflet diagonal Azur Reflect (active seulement) */}
+                  {i === active && (
+                    <span
+                      key={`gloss-${active}`}
+                      aria-hidden
+                      className="planet-gloss pointer-events-none absolute inset-0 rounded-full overflow-hidden"
+                    >
+                      <span className="planet-gloss-band" />
+                    </span>
+                  )}
                 </span>
-
               </button>
             ))}
-
-            {/* Active caption. positioned in the stage (NOT inside the planet)
-                so it is immune to the planet's GSAP transform/scale. Pinned to
-                the active slot's coordinates, then offset vertically by the
-                planet's half-height + a constant gap. */}
-            <span
-              key={`cap-${active}`}
-              aria-hidden
-              className="planet-caption pointer-events-none absolute z-[60] whitespace-nowrap font-mono text-[12px] uppercase tracking-[0.22em] text-white/85"
-              style={{
-                left: `${SLOTS[0].x}%`,
-                top: `${SLOTS[0].y}%`,
-                // active planet base size is clamp(280,30vw,420), scale 0.85,
-                // so half-height ≈ clamp(119px, 12.75vw, 178.5px). Add 28px gap.
-                transform: `translate(-50%, calc(clamp(119px, 12.75vw, 178.5px) + 28px))`,
-              }}
-            >
-              <span className="text-azur">{expertises[active].index}</span>
-              <span className="mx-2 text-white/30">·</span>
-              {expertises[active].title}
-            </span>
           </div>
+
         </div>
       )}
 
@@ -411,7 +370,7 @@ export function SolutionsCarousel() {
         </div>
       )}
 
-      {/* Hidden a11y tablist for screen readers */}
+      {/* Hidden a11y tablist */}
       <div role="tablist" aria-label="Choisir une solution" className="sr-only">
         {expertises.map((s, i) => (
           <button
@@ -429,46 +388,69 @@ export function SolutionsCarousel() {
       </div>
 
       <style>{`
-        .planet-ring {
-          animation: planet-ring-spin 14s linear infinite;
+        /* Ken-burns lent et imperceptible — juste assez pour donner vie. */
+        .ken-burns {
+          animation: ken-burns 16s cubic-bezier(0.33,0,0.67,1) forwards;
+          transform-origin: 50% 50%;
         }
-        @keyframes planet-ring-spin {
-          from { transform: rotate(0deg); }
-          to   { transform: rotate(360deg); }
-        }
-
-        .planet-caption {
-          animation: caption-in 700ms cubic-bezier(0.16,1,0.3,1) both;
-          animation-delay: 350ms;
-        }
-        @keyframes caption-in {
-          from { opacity: 0; }
-          to   { opacity: 1; }
+        @keyframes ken-burns {
+          from { transform: scale(1) translate3d(0, 0, 0); }
+          to   { transform: scale(1.04) translate3d(-0.5%, -0.5%, 0); }
         }
 
-        .dust {
-          background-image:
-            radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,0.18), transparent 60%),
-            radial-gradient(1px 1px at 28% 72%, rgba(255,255,255,0.12), transparent 60%),
-            radial-gradient(1.2px 1.2px at 41% 38%, rgba(0,166,166,0.20), transparent 60%),
-            radial-gradient(1px 1px at 55% 88%, rgba(255,255,255,0.14), transparent 60%),
-            radial-gradient(1px 1px at 64% 24%, rgba(255,255,255,0.10), transparent 60%),
-            radial-gradient(1.4px 1.4px at 78% 56%, rgba(255,255,255,0.16), transparent 60%),
-            radial-gradient(1px 1px at 90% 32%, rgba(0,166,166,0.16), transparent 60%),
-            radial-gradient(1px 1px at 8% 88%, rgba(255,255,255,0.12), transparent 60%),
-            radial-gradient(1px 1px at 95% 78%, rgba(255,255,255,0.10), transparent 60%),
-            radial-gradient(1.2px 1.2px at 35% 12%, rgba(255,255,255,0.14), transparent 60%);
-          background-size: 100% 100%;
-          background-repeat: no-repeat;
-          animation: dust-drift 60s ease-in-out infinite alternate;
+        /* Title : mask reveal — chaque mot dans un masque qui se lève */
+        .solutions-title-word {
+          display: inline-block;
+          overflow: hidden;
+          vertical-align: top;
+          padding-bottom: 0.06em;
         }
-        @keyframes dust-drift {
-          from { transform: translate3d(0, 0, 0); }
-          to   { transform: translate3d(-12px, 6px, 0); }
+        .solutions-title-word-inner {
+          display: inline-block;
+          transform: translateY(100%);
+          animation: title-mask-up 1200ms cubic-bezier(0.22,1,0.36,1) forwards;
+        }
+        @keyframes title-mask-up {
+          to { transform: translateY(0); }
+        }
+
+        /* Reflet diagonal — vernis Azur Reflect appliqué littéralement.
+           Une bande blanche translucide qui balaie la planète une fois,
+           ~1.6s après l'arrivée de l'active (laisse le temps au mask + ken-burns
+           de poser). */
+        .planet-gloss-band {
+          position: absolute;
+          top: -50%;
+          left: -75%;
+          width: 50%;
+          height: 200%;
+          background: linear-gradient(
+            115deg,
+            transparent 35%,
+            rgba(255,255,255,0.04) 45%,
+            rgba(255,255,255,0.22) 50%,
+            rgba(255,255,255,0.04) 55%,
+            transparent 65%
+          );
+          transform: translateX(0) rotate(0deg);
+          animation: planet-gloss-sweep 2400ms cubic-bezier(0.22,1,0.36,1) 1600ms forwards;
+          mix-blend-mode: screen;
+        }
+        @keyframes planet-gloss-sweep {
+          0%   { transform: translateX(0); opacity: 0; }
+          15%  { opacity: 1; }
+          85%  { opacity: 1; }
+          100% { transform: translateX(380%); opacity: 0; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .planet-ring, .planet-caption, .dust { animation: none !important; }
+          .ken-burns,
+          .solutions-title-word-inner,
+          .planet-gloss-band {
+            animation: none !important;
+          }
+          .solutions-title-word-inner { transform: none; }
+          .planet-gloss-band { opacity: 0; }
         }
       `}</style>
     </section>

@@ -28,9 +28,6 @@ export function ClientsMarquee() {
         </div>
       </div>
 
-      <p className="mt-8 text-center font-mono text-[12px] uppercase tracking-[0.18em] text-muted">
-        Site conçu par Renew
-      </p>
 
       <style>{`
         .marquee-track {

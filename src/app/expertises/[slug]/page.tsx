@@ -78,13 +78,16 @@ export default async function ExpertisePage({
           <Container>
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
               <div className="lg:col-span-7">
-                <nav aria-label="Fil d'Ariane" className="mb-6">
-                  <Link
-                    href="/expertises"
-                    className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-ink"
-                  >
-                    <span aria-hidden>←</span> Toutes les expertises
+                <nav aria-label="Fil d'Ariane" className="mb-6 flex items-center gap-2 text-sm text-muted">
+                  <Link href="/" className="transition-colors hover:text-ink">
+                    Accueil
                   </Link>
+                  <span aria-hidden>/</span>
+                  <Link href="/expertises" className="transition-colors hover:text-ink">
+                    Expertises
+                  </Link>
+                  <span aria-hidden>/</span>
+                  <span className="text-ink">{e.title}</span>
                 </nav>
                 <Eyebrow>{e.hero.eyebrow}</Eyebrow>
                 <h1

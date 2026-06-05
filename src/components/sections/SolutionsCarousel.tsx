@@ -324,7 +324,7 @@ export function SolutionsCarousel() {
             className="mt-4 h-[2px] w-[180px] overflow-hidden rounded-full bg-white/10"
           >
             <div
-              key={active}
+              key={`progress-${active}-${isDesktop}`}
               className="carousel-progress h-full origin-left bg-azur"
               style={{
                 animationPlayState: paused || userPaused ? "paused" : "running",

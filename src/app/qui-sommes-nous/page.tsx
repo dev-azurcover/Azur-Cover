@@ -46,54 +46,81 @@ export default function AboutPage() {
           <div className="space-y-20 md:space-y-24">
             {about.blocks.map((block, i) => {
               const image = BLOCK_IMAGES[i];
-              return (
-                <div key={block.title}>
-                  <Container size="narrow">
-                    <ScrollReveal delay={i * 60}>
-                      <h2
-                        className="text-ink"
-                        style={{
-                          fontSize: "clamp(1.75rem, 3vw, 2.5rem)",
-                          fontWeight: 600,
-                          letterSpacing: "-0.025em",
-                          lineHeight: 1.1,
-                        }}
-                      >
-                        {block.title}
-                      </h2>
-                      <div
-                        className="mt-6 space-y-5 text-ink"
-                        style={{ fontSize: "1.0625rem", lineHeight: 1.7 }}
-                      >
-                        {block.paragraphs.map((p, j) => (
-                          <p key={j}>{p}</p>
-                        ))}
-                      </div>
-                    </ScrollReveal>
-                  </Container>
+              const imageLeft = i % 2 !== 0;
 
-                  {image && (
-                    <ScrollReveal delay={120}>
-                      <figure className="mt-16 md:mt-20">
-                        <div className="mx-auto w-full max-w-[1320px] px-6 sm:px-10 lg:px-20">
-                          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-md bg-graphite/5 md:aspect-[21/9]">
+              // Blocs AVEC image → côte-à-côte sur desktop (alternance gauche/droite)
+              if (image) {
+                return (
+                  <Container key={block.title}>
+                    <div className={`grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20 ${imageLeft ? "lg:[direction:rtl] lg:[&>*]:[direction:ltr]" : ""}`}>
+                      <ScrollReveal delay={i * 60}>
+                        <h2
+                          className="text-ink"
+                          style={{
+                            fontSize: "clamp(1.75rem, 3vw, 2.5rem)",
+                            fontWeight: 600,
+                            letterSpacing: "-0.025em",
+                            lineHeight: 1.1,
+                          }}
+                        >
+                          {block.title}
+                        </h2>
+                        <div
+                          className="mt-6 space-y-5 text-ink"
+                          style={{ fontSize: "1.0625rem", lineHeight: 1.7 }}
+                        >
+                          {block.paragraphs.map((p, j) => (
+                            <p key={j}>{p}</p>
+                          ))}
+                        </div>
+                      </ScrollReveal>
+                      <ScrollReveal delay={120}>
+                        <figure>
+                          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-graphite/5">
                             <Image
                               src={image.src}
                               alt={image.alt}
                               fill
                               loading="lazy"
-                              sizes="(min-width: 1320px) 1280px, 100vw"
+                              sizes="(min-width: 1024px) 50vw, 100vw"
                               className="object-cover photo-treatment"
                             />
                           </div>
                           <figcaption className="mt-3 font-mono text-[12px] uppercase tracking-[0.22em] text-muted">
                             {image.caption}
                           </figcaption>
-                        </div>
-                      </figure>
-                    </ScrollReveal>
-                  )}
-                </div>
+                        </figure>
+                      </ScrollReveal>
+                    </div>
+                  </Container>
+                );
+              }
+
+              // Blocs SANS image → texte centré (narrow)
+              return (
+                <Container size="narrow" key={block.title}>
+                  <ScrollReveal delay={i * 60}>
+                    <h2
+                      className="text-ink"
+                      style={{
+                        fontSize: "clamp(1.75rem, 3vw, 2.5rem)",
+                        fontWeight: 600,
+                        letterSpacing: "-0.025em",
+                        lineHeight: 1.1,
+                      }}
+                    >
+                      {block.title}
+                    </h2>
+                    <div
+                      className="mt-6 space-y-5 text-ink"
+                      style={{ fontSize: "1.0625rem", lineHeight: 1.7 }}
+                    >
+                      {block.paragraphs.map((p, j) => (
+                        <p key={j}>{p}</p>
+                      ))}
+                    </div>
+                  </ScrollReveal>
+                </Container>
               );
             })}
           </div>

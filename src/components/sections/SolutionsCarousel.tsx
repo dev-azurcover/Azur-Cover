@@ -315,23 +315,6 @@ export function SolutionsCarousel() {
             >
               →
             </button>
-            <button
-              type="button"
-              onClick={() => setUserPaused((p) => !p)}
-              aria-pressed={userPaused}
-              aria-label={
-                userPaused
-                  ? "Reprendre le défilement automatique"
-                  : "Mettre en pause le défilement automatique"
-              }
-              className="ml-1 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/75 transition hover:border-white/50 hover:text-white"
-            >
-              {userPaused ? (
-                <Play className="h-4 w-4" aria-hidden />
-              ) : (
-                <Pause className="h-4 w-4" aria-hidden />
-              )}
-            </button>
           </div>
 
           {/* Texte — sous la nav, centré horizontalement. Le crossfade (1400ms)

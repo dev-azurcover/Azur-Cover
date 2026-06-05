@@ -94,14 +94,14 @@ export default async function RealisationPage({
         {/* Hero image full-bleed */}
         <section className="pb-20 md:pb-28">
           <div className="mx-auto w-full max-w-[1320px] px-6 sm:px-10 lg:px-20">
-            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-md bg-graphite/5">
+            <div className="relative aspect-[16/8.5] w-full overflow-hidden rounded-md bg-graphite/5">
               <Image
                 src={r.imageSrc}
                 alt={r.imageAlt}
                 fill
                 preload
                 sizes="(min-width: 1320px) 1280px, 100vw"
-                className="object-cover photo-treatment"
+                className="object-cover object-top photo-treatment"
               />
             </div>
           </div>
